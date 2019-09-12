@@ -1,0 +1,222 @@
+.login-wraper{
+    display: flex;
+    justify-content: center;
+    .login-content {
+        background: url(../images/login-bg.png) no-repeat;
+        width: 713px;
+        height: 416px;
+        position: relative;
+        border: none;
+        box-shadow: none;
+
+
+        .top-caption {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.7;
+            text-align: center;
+            color: #fff;
+            position: absolute;
+            top: 8px;
+            left: 75px;
+            width: 290px;
+            padding-top: 15px;
+        }
+
+        .tabs-buttons {
+            display: flex;
+            position: absolute;
+            top: 35px;
+            right: 55px;
+
+            a {
+                background-color: #fff;
+                color: #56ccf2;
+                border-radius: 50px;
+                border: 1px solid #56ccf2;
+                font-size: 16px;
+                font-weight: 500;
+                width: 120px;
+                padding: 12px 0;
+                margin: 0 5px;
+                text-align: center;
+            }
+
+            a.is-active {
+                background-color: #56ccf2;
+                color: #fff;
+            }
+        }
+
+        .tabs-contents {
+            position: absolute;
+            top: 110px;
+            right: 30px;
+            width: 310px;
+
+            >div {
+                opacity: 0;
+                visibility: hidden;
+                transition: all .3s;
+                position: absolute;
+                top: 0;
+                left: 0;
+
+                .form-login {
+                    text-align: center;
+
+                    input[type=email],
+                    input[type=password],
+                    input[type=text] {
+                        text-align: left;
+                        width: 100%;
+                        height: 44px;
+                        border-radius: 50px;
+                        border: solid 1px #e0e0e0;
+                        background-color: #f9f9f9;
+                        padding: 0 20px;
+                        margin-bottom: 20px;
+                        font-weight: 500;
+                        color: #757575;
+                    }
+
+                    button[type=submit] {
+                        width: 100%;
+                        padding: 12px 0;
+                        border: none;
+                        border-radius: 50px;
+                        background-color: #56ccf2;
+                        font-size: 16px;
+                        font-weight: 700;
+                        color: #fff;
+                        margin-bottom: 20px;
+                        cursor: pointer;
+                    }
+
+                    .forget-password-link {
+                        font-size: 16px;
+                        font-weight: 700;
+                        color: #56ccf2;
+                        text-decoration: underline;
+                    }
+                }
+
+                .social-login {
+                    margin-top: 30px;
+                    display: flex;
+                    align-items: center;
+
+                    span {
+                        display: inline-block;
+                    }
+
+                    a {
+                        margin: 0 5px;
+                        border-radius: 50%;
+                        width: 36px;
+                        height: 36px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    a.facebook-link {
+                        background-color: #2196f3;
+                    }
+                    a.google-link {
+                        background-color: #e74c3c;
+                    }
+                }
+            }
+        }
+
+        .tabs-contents>div.is-active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+
+    }
+}
+@media only screen and (max-width: 1024px) {
+	.login-wraper {
+        .login-content {
+            background: #fff;
+            background-size: cover;
+            background-position: center top;
+            height: auto;
+            padding-bottom: 60%;
+            width: 98%;
+
+            .top-caption {
+                display: none;
+            }
+            .tabs-buttons {
+                display: flex;
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                width: 45%;
+
+                a {
+                    font-size: 2.5vw;
+                    width: 50%;
+                    padding: 5px 0;
+                    margin: 0 1px;
+                }
+            }
+
+            .tabs-contents {
+                position: absolute;
+                top: 70px;
+                right: 0;
+                width: 100%;
+                z-index: 9999;
+                .register-section {
+                    width: 100%;
+                }
+                >div .form-login {
+                    padding: 10px;
+                    text-align: center;
+
+                    input[type=email],
+                    input[type=password],
+                    input[type=text] {
+                        // height: auto;
+                        border-radius: 25px;
+                        padding: 5px 10px;
+                        margin-bottom: 8px;
+                        font-size: 2.5vw;
+                    }
+
+                    button[type=submit] {
+                        font-size: 2.5vw;
+                        margin-bottom: 5px;
+                        padding: 10px 0px;
+                        border-radius: 50px;
+                    }
+                    .forget-password-link {
+                        font-size: 2.5vw;
+                    }
+                }
+
+                >div .social-login {
+                    padding-left: 10px;
+                    margin-top: 5px;
+
+                    a {
+                        width: 20px;
+                        height: 20px;
+
+                        span {
+                            background-size: cover;
+                            width: 15px;
+                            height: 15px;
+                        }
+                    }
+                }
+            }
+        }
+    } 
+}
