@@ -5,13 +5,27 @@ import Footer from '../../layouts/Footer';
 import {Helmet} from "react-helmet";
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
-import { detailActions } from '../../_actions';
+import { detailActions, followActions } from '../../_actions';
 import config from '../../config.js';
 class Detail extends Component {
+	constructor(props) {
+		super(props);
+		this.sate = {};
+
+		this.onFollow = this.onFollow.bind(this);
+	}
 
 	componentDidMount() {
 		let { id } = this.props.match.params;
         this.props.getManga(id);
+    }
+
+    onFollow(e) {
+    	e.preventDefault();
+
+    	const { loggedIn } = this.props;
+    	let { item } = this.props.detail;
+    	this.props.createFollow(loggedIn, item)
     }
 
 	render() {
@@ -29,7 +43,7 @@ class Detail extends Component {
 
 			item.categories.map(function(category, index) {
 				categories.push(
-					<li className="li03">
+					<li key={index} className="li03">
 						<Link to={'/category/'+category._id}>{category.name}</Link>
 					</li>
 				);
@@ -43,7 +57,7 @@ class Detail extends Component {
     		maxHeight: '247px'
 		}
 
-		console.log(item)
+		// console.log(item)
 
 	  return (
 	  	<div className="wrap-content">
@@ -88,8 +102,8 @@ class Detail extends Component {
 				          {categories}
 				        </ul>
 				        <ul className="story-detail-menu">
-				          <li className="li01"><a href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-1.html" className="button is-danger is-rounded"><span className="btn-read" />Đọc từ đầu</a></li>
-				          <li className="li02"><a href="#follow" className="button is-danger is-rounded btn-subscribe subscribeBook" data-page="index" data-id={4097}><span className="fa fa-heart" />Theo dõi</a></li>
+				          <li className="li01"><Link to={'/chapter/' + id + '/1'} className="button is-danger is-rounded"><span className="btn-read" />Đọc từ đầu</Link></li>
+				          <li className="li02"><a href={''} onClick={this.onFollow} className="button is-danger is-rounded btn-subscribe subscribeBook" data-page="index" data-id={4097}><span className="fa fa-heart" />Theo dõi</a></li>
 				          <li className="li03">
 				            <a href="#haha" className="button is-danger is-rounded btn-like" data-id={4097}><span className="fa fa-thumbs-up" />Thích</a>
 				          </li>
@@ -398,12 +412,15 @@ class Detail extends Component {
 }
 
 function mapState(state) {
-    const { detail } = state;
-    return { detail };
+    const { detail, follows } = state;
+    const { loggedIn } = state.authentication;
+    return { detail, follows, loggedIn };
 }
 
 const actionCreators = {
-    getManga: detailActions.getById
+    getManga: detailActions.getById,
+    getFollows: followActions.getAll,
+    createFollow: followActions.create
 }
 
 const connectedDetailPage = connect(mapState, actionCreators)(Detail);

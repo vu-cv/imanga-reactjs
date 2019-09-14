@@ -7,6 +7,8 @@ import { authentication } from './authentication.reducer';
 import { category, categories } from './categories.reducer';
 import { detail } from './detail.reducer';
 import { mangas, manga } from './mangas.reducer';
+import { chapters, chapter } from './chapters.reducer';
+import { follows } from './follows.reducer';
 
 const rootReducer = combineReducers({
   authentication,
@@ -17,7 +19,10 @@ const rootReducer = combineReducers({
   categories,
   detail,
   mangas, 
-  manga
+  manga,
+  chapters,
+  chapter,
+  follows
 });
 
 export default rootReducer;

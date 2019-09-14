@@ -3,3 +3,5 @@ export * from './user.constants';
 export * from './category.constants';
 export * from './detail.constants';
 export * from './manga.constants';
+export * from './chapter.constants';
+export * from './follow.constants';

@@ -233,12 +233,7 @@
             }
         }   
     } 
-    .story-item.show-left.open {
-        .more-info {
-            -webkit-transform: translateX(-10px);
-            transform: translateX(-10px);
-        }   
-    }
+    
 
     .cm-item {
         padding-right: 5px;
@@ -246,6 +241,12 @@
         margin-bottom: 15px;
     }
 
+    .story-item.show-left.open {
+        .more-info {
+            -webkit-transform: translateX(-10px);
+            transform: translateX(-10px);
+        }   
+    }
     .story-item.open {
         .more-info {
             -webkit-transform: translateX(0px);
@@ -254,6 +255,7 @@
             visibility: visible;
         }
     }
+
 
 
 }

@@ -3,12 +3,12 @@ import React, {Component} from 'react';
 import Footer from '../../layouts/Footer';
 // import './style.css';
 
-// import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {Helmet} from "react-helmet";
 import CommicItem from "../../layouts/CommicItem";
 import { MangaItem } from "../../layouts";
 // import axios from 'axios';
-import { mangaActions } from '../../_actions';
+import { mangaActions, chapterActions } from '../../_actions';
 import { connect } from 'react-redux';
 
 class Home extends Component {
@@ -24,10 +24,12 @@ class Home extends Component {
 
 	componentDidMount() {
 		this.props.getMangas(18);
+		this.props.getChapters(5);
+
 	}
 
 	render() {
-		let { mangas } = this.props;
+		let { mangas, chapters } = this.props;
 		let listUpdate = [];
 		let listSex = [];
 
@@ -61,78 +63,78 @@ class Home extends Component {
 			          <div className="col-sm-6 ancestor-left">
 			            <div className="tile is-parent">
 			              <div className="tile is-child">
-			                <a href="https://truyenqq.com/truyen-tranh/kimetsu-no-yaiba-2624-chap-102.html">
+			                <Link to={chapters.items && '/chapters/' + chapters.items[0]._id}>
 			                  <div className="hero-item has-excerpt">
 			                    <img className="tor-left" src="http://i.mangaqq.com/slider/583x386/slider_1559213537.jpg?thang=t241" alt="cover" />
 			                    <div className="bottom-shadow" />
 			                    <div className="captions">
 			                      <h5>Thể loại: Drama, Fantasy, Shounen, Romance, Historical</h5>
-			                      <h3>Kimetsu No Yaiba</h3>
+			                      <h3>{ chapters.items && chapters.items[0].name }</h3>
 			                    </div>
 			                    <div className="chapter red">Chương 102</div>
 			                    <div className="excerpt">Kimetsu no Yaiba – Tanjirou là con cả của gia đình vừa mất cha. Một ngày nọ, Tanjirou đến thăm thị trấn khác để bán than, khi đêm về cậu ở nghỉ tại nhà người khác thay vì về nhà vì lời đồn thổi về ác quỷ luôn rình mò gần núi vào buổi tối. Khi cậu về nhà vào ngày hôm sau, bị kịch đang đợi chờ cậu…
 			                    </div>
 			                  </div>
 			                  {/* /.hero-item */}
-			                </a>
+			                </Link>
 			              </div>
 			            </div>
 			          </div>
 			          <div className="col-sm-6 ancestor-right">
 			            <div className="row mgr-0 tile is-3 is-vertical vtc-top is-parent">
 			              <div className="col-sm-6 pdr-0 tile is-child">
-			                <a href="https://truyenqq.com/truyen-tranh/nanatsu-no-taizai-740-chap-323.html">
+			                <Link to={chapters.items && '/chapters/' + chapters.items[1]._id}>
 			                  <div className="hero-item">
 			                    <img className="cover" src="http://i.mangaqq.com/slider/290x191/slider_1559213426.jpg?thang=t241" alt="cover" />
 			                    <div className="bottom-shadow" />
 			                    <div className="captions">
-			                      <h3>Nanatsu No Taizai</h3>
+			                      <h3>{ chapters.items && chapters.items[1].name }</h3>
 			                    </div>
 			                    <div className="chapter orange">Chương 323</div>
 			                  </div>
 			                  {/* /.hero-item */}
-			                </a>
+			                </Link>
 			              </div>
 			              <div className="col-sm-6 pdr-0 tile is-child pdl-4">
-			                <a href="https://truyenqq.com/truyen-tranh/the-promised-neverland-2547-chap-146.html">
+			                <Link to={chapters.items && '/chapters/' + chapters.items[2]._id}>
 			                  <div className="hero-item">
 			                    <img className="cover" src="http://i.mangaqq.com/slider/290x191/slider_1560501729.jpg?thang=t241" alt="cover" />
 			                    <div className="bottom-shadow" />
 			                    <div className="captions">
-			                      <h3>The Promised Neverland</h3>
+			                      <h3>{ chapters.items && chapters.items[2].name }</h3>
 			                    </div>
 			                    <div className="chapter blue">Chương 146</div>
 			                  </div>
 			                  {/* /.hero-item */}
-			                </a>
+			                </Link>
 			              </div>
 			            </div>
 			            <div className="row mgr-0 tile is-3 is-vertical vtc-allow is-parent">
 			              <div className="col-sm-6 mgb-0 pdr-0 tile is-child">
-			                <a href="https://truyenqq.com/truyen-tranh/black-clover-499-chap-216.html">
+			                <Link to={chapters.items && '/chapters/' + chapters.items[3]._id}>
 			                  <div className="hero-item">
 			                    <img className="cover" src="http://i.mangaqq.com/slider/290x191/slider_1560493497.jpg?thang=t241" alt="cover" />
 			                    <div className="bottom-shadow" />
 			                    <div className="captions">
-			                      <h3>Black Clover</h3>
+			                      <h3>{ chapters.items && chapters.items[3].name }</h3>
 			                    </div>
 			                    <div className="chapter violet">Chương 216</div>
 			                  </div>
 			                  {/* /.hero-item */}
-			                </a>
+			                </Link>
 			              </div>
 			              <div className="col-sm-6 mgb-0 pdr-0 tile is-child pdl-4">
-			                <a href="https://truyenqq.com/truyen-tranh/boku-no-hero-academia-380-chap-239.html">
+			                <Link to={chapters.items && '/chapters/' + chapters.items[4]._id}>
 			                  <div className="hero-item">
 			                    <img className="cover" src="http://i.mangaqq.com/slider/290x191/slider_1560573084.jpg?thang=t241" alt="cover" />
 			                    <div className="bottom-shadow" />
 			                    <div className="captions">
-			                      <h3>Boku No Hero Academia</h3>
+			                      <h3>{ chapters.items && chapters.items[4].name }</h3>
 			                    </div>
 			                    <div className="chapter green">Chương 239</div>
 			                  </div>
 			                  {/* /.hero-item */}
-			                </a>
+			                </Link>
 			              </div>
 			            </div>
 			          </div>
@@ -209,12 +211,13 @@ class Home extends Component {
 }
 
 function mapState(state) {
-	const { mangas } = state;
-    return { mangas };
+	const { mangas, chapters } = state;
+    return { mangas, chapters };
 }
 
 const actionCreators = {
-	getMangas: mangaActions.getAll
+	getMangas: mangaActions.getAll,
+	getChapters: chapterActions.getAll
 };
 
 const connectedLoginPage = connect(mapState, actionCreators)(Home);

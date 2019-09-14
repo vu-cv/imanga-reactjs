@@ -5,7 +5,7 @@ import {Home} from './pages/Home';
 import {Detail} from './pages/Detail';
 import {Account} from './pages/Account';
 import Chapter from './pages/Chapter';
-import Follow from './pages/Follow';
+import { Follow } from './pages/Follow';
 import { Category } from './pages/Category';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
@@ -77,7 +77,7 @@ class App extends Component {
 	  		<ScrollTopRoute exact path="/" component={Home}  title={"Props through render"} />
 	  		<ScrollTopRoute path="/manga/:id" component={Detail}/>
 	  		<ScrollTopRoute path="/account" component={Account}/>
-	  		<ScrollTopRoute path="/chapter" component={Chapter}/>
+	  		<ScrollTopRoute path="/chapter/:mangaId/:chapterId" component={Chapter}/>
 	  		<ScrollTopRoute path="/follow" component={Follow}/>
 	  		<ScrollTopRoute path="/history" component={Follow}/>
 	  		

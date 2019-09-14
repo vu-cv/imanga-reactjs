@@ -14,7 +14,7 @@ class MangaItem extends Component {
 
 		categories.map(function(category, index) {
 			listCategories.push(
-				<Link className="blue" to={'/category/'+category._id}>{category.name}</Link>
+				<Link key={index} className="blue" to={'/category/'+category._id}>{category.name}</Link>
 			);
 		})
 		return(
