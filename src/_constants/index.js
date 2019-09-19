@@ -5,3 +5,5 @@ export * from './detail.constants';
 export * from './manga.constants';
 export * from './chapter.constants';
 export * from './follow.constants';
+export * from './history.constants';
+export * from './like.constants';

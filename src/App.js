@@ -4,11 +4,16 @@ import {Headers} from './layouts/Header';
 import {Home} from './pages/Home';
 import {Detail} from './pages/Detail';
 import {Account} from './pages/Account';
-import Chapter from './pages/Chapter';
+import { Chapter } from './pages/Chapter';
 import { Follow } from './pages/Follow';
+import { History } from './pages/History';
 import { Category } from './pages/Category';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
+import { Search } from './pages/Search';
+import { Female } from './pages/Female';
+import { Male } from './pages/Male';
+import { Sort } from './pages/Sort';
 
 import ScrollTopRoute from './_components/ScrollTopRoute';
 
@@ -79,11 +84,15 @@ class App extends Component {
 	  		<ScrollTopRoute path="/account" component={Account}/>
 	  		<ScrollTopRoute path="/chapter/:mangaId/:chapterId" component={Chapter}/>
 	  		<ScrollTopRoute path="/follow" component={Follow}/>
-	  		<ScrollTopRoute path="/history" component={Follow}/>
+	  		<ScrollTopRoute path="/history" component={History}/>
+	  		<ScrollTopRoute path="/search" component={Search}/>
 	  		
 	  		<ScrollTopRoute path="/category/:id" component={Category}/>
 	  		<ScrollTopRoute path="/login" component={Login}/>
 	  		<ScrollTopRoute path="/register" component={Register}/>
+	  		<ScrollTopRoute path="/female-commic" component={Female}/>
+	  		<ScrollTopRoute path="/male-commic" component={Male}/>
+	  		<ScrollTopRoute path="/sort/:sortBy" component={Sort}/>
 		</Router>
 	  	</div>
 	  );

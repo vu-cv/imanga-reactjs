@@ -1,23 +1,41 @@
 import React, {Component} from 'react';
 // import Header from '../../components/layouts/Header';
-import Footer from '../../layouts/Footer';
+import { Footer, MangaItem } from '../../layouts';
 // import './style.css';
 import {Helmet} from "react-helmet";
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
-import { detailActions, followActions } from '../../_actions';
+import { detailActions, followActions, likeActions, mangaActions } from '../../_actions';
 import config from '../../config.js';
 class Detail extends Component {
 	constructor(props) {
 		super(props);
-		this.sate = {};
+		this.state = {
+			catId: ''
+		};
+
+		let { id } = this.props.match.params;
+		this.props.viewCount(id);
 
 		this.onFollow = this.onFollow.bind(this);
+		this.onLike = this.onLike.bind(this);
+
+        this.props.getManga(id);
+
+        this.props.history.listen((location, action) => {
+        	let pathName = location.pathname.split('/')[1]
+        	let mangaId = location.pathname.split('/')[2]
+        	if (pathName == "manga") {
+				this.props.getManga(mangaId);        		
+        	}
+        })
+
+
 	}
 
 	componentDidMount() {
-		let { id } = this.props.match.params;
-        this.props.getManga(id);
+		// console.log(this.state)
+        this.props.getMangas(6, null, null)
     }
 
     onFollow(e) {
@@ -28,15 +46,62 @@ class Detail extends Component {
     	this.props.createFollow(loggedIn, item)
     }
 
+    onLike(e) {
+    	e.preventDefault();
+
+    	const { loggedIn } = this.props;
+    	let { item } = this.props.detail;
+    	this.props.createLike(loggedIn, item)
+    }
+
+    handleReload() {
+    	console.log('ok')
+    }
+
+    componentDidUpdate() {
+    	console.log('update')
+    }
+
+    
+
 	render() {
+		
 		let { id } = this.props.match.params;
 		let { item } = this.props.detail;
+		let { mangas } = this.props;
+		console.log(item)
 		let authors = [];
 		let categories = [];
+		let chapters = [];
+		let cungTheLoai = [];
 		let imageUrl = '';
+
+		
+
 		let imageDefault = '/images/chu-nhan-xin-hay-coi-ra_1502711358.jpg';
 
+		let btnFollow = <li className="li02">
+		<a href={''} onClick={this.onFollow} className="button is-danger is-rounded btn-subscribe subscribeBook" data-page="index" data-id={4097}>
+		<span className="fa fa-heart-o" />Theo dõi</a>
+		</li>;
+
+		let btnLike = <li className="li03">
+				            <a href={''} onClick={this.onLike} className="button is-danger is-rounded btn-like" data-id={4097}><span className="fa fa-thumbs-o-up" />Thích</a>
+				          </li>;
+
+
 		if (item) {
+			item.chapters.map(function(chapter, index) {
+				chapters.push(
+					<div key={index} className="works-chapter-item row">
+			            <div className="col-md-10 col-sm-10 col-xs-8 ">
+			              <a target="_blank" rel="noopener noreferrer" href={'/chapter/'+id+'/'+chapter._id}>Chương {index + 1}</a>
+			            </div>
+			            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
+			              {new Date(chapter.createdAt).toLocaleDateString()} </div>
+			          </div>
+				);
+			})
 			item.authors.map(function(auth, index) {
 				authors.push(auth.name)
 			});
@@ -50,6 +115,35 @@ class Detail extends Component {
 			})
 
 			imageUrl = config.apiUrl + item.picture.url;
+
+			let mangas = JSON.parse(localStorage.getItem('mangas')) || [];
+			let likes = JSON.parse(localStorage.getItem('likes')) || [];
+			// console.log(mangas)
+
+			let check = mangas.findIndex(index => {
+				return index.id == item.id;
+			});
+
+			let checkLike = likes.findIndex(index => {
+				return index.id == item.id;
+			});
+			
+			if (check != -1) {
+				btnFollow = <li className="li02">
+				<a href={''} onClick={this.onFollow} className="button is-danger is-rounded btn-subscribe subscribeBook" data-page="index" data-id={4097}>
+				<span className="fa fa-heart" />Hủy theo dõi</a>
+				</li>;
+			}
+
+			if (checkLike != -1) {
+				btnLike = <li className="li03">
+				            <a href={''} onClick={this.onLike} className="button is-danger is-rounded btn-like" data-id={4097}>
+				            <span className="fa fa-thumbs-up" />Đã thích</a>
+				          </li>;
+			}
+
+			
+
 		}
 
 		let styleImage = {
@@ -57,7 +151,11 @@ class Detail extends Component {
     		maxHeight: '247px'
 		}
 
-		// console.log(item)
+		if (mangas.items) {
+			mangas.items.map(function(manga, index) {
+				cungTheLoai.push(<MangaItem key={index} manga={manga} />)
+			})
+		}
 
 	  return (
 	  	<div className="wrap-content">
@@ -89,24 +187,23 @@ class Detail extends Component {
 				      <div className="center">
 				        <h1>{ item && item.name }</h1>
 				        <div className="txt">
-				          <p className="info-item">Tác giả: <a className="org" href="https://truyenqq.com/tac-gia/dang-cap-nhat-239.html">{authors}</a></p>
-				          <p className="info-item">Tình trạng: Đang Cập Nhật</p>
+				          <p className="info-item">Tác giả: <a className="org" href={''}>{authors}</a></p>
+				          <p className="info-item">Tình trạng: { item && item.status ? 'Hoàn thành' : 'Chưa hoàn thành' }</p>
 				          <div>
 				            <span>Thống kê:</span>
-				            <span className="sp01"><i className="fa fa-thumbs-up" /> <span className="sp02 number-like">3</span></span>
-				            <span className="sp01"><i className="fa fa-heart" /> <span className="sp02">52</span></span>
-				            <span className="sp01"><i className="fa fa-eye" /> <span className="sp02">79,078</span></span>
+				            <span className="sp01"><i className="fa fa-thumbs-up" /> <span className="sp02 number-like">{item && item.likeCount}</span></span>
+				            <span className="sp01"><i className="fa fa-heart" /> <span className="sp02">{item && item.followCount}</span></span>
+				            <span className="sp01"><i className="fa fa-eye" /> <span className="sp02">{item && item.viewCount}</span></span>
 				          </div>
 				        </div>
 				        <ul className="list01">
 				          {categories}
 				        </ul>
 				        <ul className="story-detail-menu">
-				          <li className="li01"><Link to={'/chapter/' + id + '/1'} className="button is-danger is-rounded"><span className="btn-read" />Đọc từ đầu</Link></li>
-				          <li className="li02"><a href={''} onClick={this.onFollow} className="button is-danger is-rounded btn-subscribe subscribeBook" data-page="index" data-id={4097}><span className="fa fa-heart" />Theo dõi</a></li>
-				          <li className="li03">
-				            <a href="#haha" className="button is-danger is-rounded btn-like" data-id={4097}><span className="fa fa-thumbs-up" />Thích</a>
-				          </li>
+				          <li className="li01"><Link to={item && '/chapter/'+ id+ '/' + (item.chapters.length > 0 ? item.chapters[0]._id : '')} className="button is-danger is-rounded"><span className="btn-read" />Đọc từ đầu</Link></li>
+				          {btnFollow}
+				          {btnLike}
+				          
 				          <li className="li04">
 				            <a data-toggle="collapse" href="#collapseReadmore" aria-expanded="false" aria-controls="collapseReadmore" className="button is-readmore is-rounded btn-like" data-id={4097}><span className="fa fa-caret-square-o-down" />Xem thêm</a>
 				          </li>
@@ -122,284 +219,13 @@ class Detail extends Component {
 				      </div>
 				      <div className="box">
 				        <div className="works-chapter-list">
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-21.html">Chương 21</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-20.html">Chương 20</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-19.html">Chương 19</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-18.html">Chương 18</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-17.html">Chương 17</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-16.html">Chương 16</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-15.html">Chương 15</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-14.html">Chương 14</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-13.html">Chương 13</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-12.html">Chương 12</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-11.html">Chương 11</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-10.html">Chương 10</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-9.html">Chương 9</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-8.html">Chương 8</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-7.html">Chương 7</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-6.html">Chương 6</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-5.html">Chương 5</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-4.html">Chương 4</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-3.html">Chương 3</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-2.html">Chương 2</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
-				          <div className="works-chapter-item row">
-				            <div className="col-md-10 col-sm-10 col-xs-8 ">
-				              <a target="_blank" rel="noopener noreferrer" href="https://truyenqq.com/truyen-tranh/bach-sac-thanh-toc-4097-chap-1.html">Chương 1</a>
-				            </div>
-				            <div className="col-md-2 col-sm-2 col-xs-4 text-right">
-				              25/08/2019 </div>
-				          </div>
+				        	{chapters}
 				        </div>
 				      </div>
 				    </div>
 				    <div className="block03">
 				      <h2 className="story-detail-title">Cùng thể loại</h2>
-				      <div className="col-xs-6 col-sm-4 col-md-3 col-lg-2 cm-item">
-				        <div className="story-item">
-				          <a href="https://truyenqq.com/truyen-tranh/chu-nhan-xin-hay-coi-ra-3599.html">
-				            <img className="story-cover img-responsive" src="images/chu-nhan-xin-hay-coi-ra_1502711358.jpg" alt="Chủ Nhân, Xin Hãy Cởi Ra!" />
-				          </a>
-				          <div className="top-notice">
-				            <span className="time-ago">7 Phút Trước</span> <span className="type-label hot">Hot</span> </div>
-				          <h3 className="title-book"><a href="https://truyenqq.com/truyen-tranh/chu-nhan-xin-hay-coi-ra-3599.html">Chủ Nhân, Xin Hãy Cởi Ra!</a></h3>
-				          <div className="episode-book"><a href="https://truyenqq.com/truyen-tranh/chu-nhan-xin-hay-coi-ra-3599-chap-35.html"> Chương 35</a></div>
-				          <div className="more-info">
-				            <div className="title-more">Chủ Nhân, Xin Hãy Cởi Ra! </div>
-				            <p className="info">Tình trạng: Đang Cập Nhật</p>
-				            <p className="info">Lượt xem: 58,432</p>
-				            <p className="info">Lượt theo dõi: 164</p>
-				            <div className="list-tags">
-				              <a className="blue" href="https://truyenqq.com/the-loai/manhua-35.html">Manhua</a><a className="blue" href="https://truyenqq.com/the-loai/romance-36.html">Romance</a><a className="blue" href="https://truyenqq.com/the-loai/shoujo-38.html">Shoujo</a> </div>
-				            <div className="excerpt">Bị người yêu thanh mai trúc mã phản bội, tôi liền xách túi bỏ đi. Cái gì trúc mã dịu dàng, thiếu niên trong trắng, tôi đều không cần nữa. Người tôi cần chỉ có anh ấy, giám đốc Lạc Cảnh Minh bá đạo, tự luyến, kiêu ngạo không ai bằng!
-				            </div>
-				          </div>
-				        </div>
-				      </div>
-				      <div className="col-xs-6 col-sm-4 col-md-3 col-lg-2 cm-item">
-				        <div className="story-item">
-				          <a href="https://truyenqq.com/truyen-tranh/chu-nhan-xin-hay-coi-ra-3599.html">
-				            <img className="story-cover img-responsive" src="images/chu-nhan-xin-hay-coi-ra_1502711358.jpg" alt="Chủ Nhân, Xin Hãy Cởi Ra!" />
-				          </a>
-				          <div className="top-notice">
-				            <span className="time-ago">7 Phút Trước</span> <span className="type-label hot">Hot</span> </div>
-				          <h3 className="title-book"><a href="https://truyenqq.com/truyen-tranh/chu-nhan-xin-hay-coi-ra-3599.html">Chủ Nhân, Xin Hãy Cởi Ra!</a></h3>
-				          <div className="episode-book"><a href="https://truyenqq.com/truyen-tranh/chu-nhan-xin-hay-coi-ra-3599-chap-35.html"> Chương 35</a></div>
-				          <div className="more-info">
-				            <div className="title-more">Chủ Nhân, Xin Hãy Cởi Ra! </div>
-				            <p className="info">Tình trạng: Đang Cập Nhật</p>
-				            <p className="info">Lượt xem: 58,432</p>
-				            <p className="info">Lượt theo dõi: 164</p>
-				            <div className="list-tags">
-				              <a className="blue" href="https://truyenqq.com/the-loai/manhua-35.html">Manhua</a><a className="blue" href="https://truyenqq.com/the-loai/romance-36.html">Romance</a><a className="blue" href="https://truyenqq.com/the-loai/shoujo-38.html">Shoujo</a> </div>
-				            <div className="excerpt">Bị người yêu thanh mai trúc mã phản bội, tôi liền xách túi bỏ đi. Cái gì trúc mã dịu dàng, thiếu niên trong trắng, tôi đều không cần nữa. Người tôi cần chỉ có anh ấy, giám đốc Lạc Cảnh Minh bá đạo, tự luyến, kiêu ngạo không ai bằng!
-				            </div>
-				          </div>
-				        </div>
-				      </div>
-				      <div className="col-xs-6 col-sm-4 col-md-3 col-lg-2 cm-item">
-				        <div className="story-item">
-				          <a href="https://truyenqq.com/truyen-tranh/chu-nhan-xin-hay-coi-ra-3599.html">
-				            <img className="story-cover img-responsive" src="images/chu-nhan-xin-hay-coi-ra_1502711358.jpg" alt="Chủ Nhân, Xin Hãy Cởi Ra!" />
-				          </a>
-				          <div className="top-notice">
-				            <span className="time-ago">7 Phút Trước</span> <span className="type-label hot">Hot</span> </div>
-				          <h3 className="title-book"><a href="https://truyenqq.com/truyen-tranh/chu-nhan-xin-hay-coi-ra-3599.html">Chủ Nhân, Xin Hãy Cởi Ra!</a></h3>
-				          <div className="episode-book"><a href="https://truyenqq.com/truyen-tranh/chu-nhan-xin-hay-coi-ra-3599-chap-35.html"> Chương 35</a></div>
-				          <div className="more-info">
-				            <div className="title-more">Chủ Nhân, Xin Hãy Cởi Ra! </div>
-				            <p className="info">Tình trạng: Đang Cập Nhật</p>
-				            <p className="info">Lượt xem: 58,432</p>
-				            <p className="info">Lượt theo dõi: 164</p>
-				            <div className="list-tags">
-				              <a className="blue" href="https://truyenqq.com/the-loai/manhua-35.html">Manhua</a><a className="blue" href="https://truyenqq.com/the-loai/romance-36.html">Romance</a><a className="blue" href="https://truyenqq.com/the-loai/shoujo-38.html">Shoujo</a> </div>
-				            <div className="excerpt">Bị người yêu thanh mai trúc mã phản bội, tôi liền xách túi bỏ đi. Cái gì trúc mã dịu dàng, thiếu niên trong trắng, tôi đều không cần nữa. Người tôi cần chỉ có anh ấy, giám đốc Lạc Cảnh Minh bá đạo, tự luyến, kiêu ngạo không ai bằng!
-				            </div>
-				          </div>
-				        </div>
-				      </div>
-				      <div className="col-xs-6 col-sm-4 col-md-3 col-lg-2 cm-item">
-				        <div className="story-item">
-				          <a href="https://truyenqq.com/truyen-tranh/chu-nhan-xin-hay-coi-ra-3599.html">
-				            <img className="story-cover img-responsive" src="images/chu-nhan-xin-hay-coi-ra_1502711358.jpg" alt="Chủ Nhân, Xin Hãy Cởi Ra!" />
-				          </a>
-				          <div className="top-notice">
-				            <span className="time-ago">7 Phút Trước</span> <span className="type-label hot">Hot</span> </div>
-				          <h3 className="title-book"><a href="https://truyenqq.com/truyen-tranh/chu-nhan-xin-hay-coi-ra-3599.html">Chủ Nhân, Xin Hãy Cởi Ra!</a></h3>
-				          <div className="episode-book"><a href="https://truyenqq.com/truyen-tranh/chu-nhan-xin-hay-coi-ra-3599-chap-35.html"> Chương 35</a></div>
-				          <div className="more-info">
-				            <div className="title-more">Chủ Nhân, Xin Hãy Cởi Ra! </div>
-				            <p className="info">Tình trạng: Đang Cập Nhật</p>
-				            <p className="info">Lượt xem: 58,432</p>
-				            <p className="info">Lượt theo dõi: 164</p>
-				            <div className="list-tags">
-				              <a className="blue" href="https://truyenqq.com/the-loai/manhua-35.html">Manhua</a><a className="blue" href="https://truyenqq.com/the-loai/romance-36.html">Romance</a><a className="blue" href="https://truyenqq.com/the-loai/shoujo-38.html">Shoujo</a> </div>
-				            <div className="excerpt">Bị người yêu thanh mai trúc mã phản bội, tôi liền xách túi bỏ đi. Cái gì trúc mã dịu dàng, thiếu niên trong trắng, tôi đều không cần nữa. Người tôi cần chỉ có anh ấy, giám đốc Lạc Cảnh Minh bá đạo, tự luyến, kiêu ngạo không ai bằng!
-				            </div>
-				          </div>
-				        </div>
-				      </div>
-				      <div className="col-xs-6 col-sm-4 col-md-3 col-lg-2 cm-item">
-				        <div className="story-item show_left">
-				          <a href="https://truyenqq.com/truyen-tranh/chu-nhan-xin-hay-coi-ra-3599.html">
-				            <img className="story-cover img-responsive" src="images/chu-nhan-xin-hay-coi-ra_1502711358.jpg" alt="Chủ Nhân, Xin Hãy Cởi Ra!" />
-				          </a>
-				          <div className="top-notice">
-				            <span className="time-ago">7 Phút Trước</span> <span className="type-label hot">Hot</span> </div>
-				          <h3 className="title-book"><a href="https://truyenqq.com/truyen-tranh/chu-nhan-xin-hay-coi-ra-3599.html">Chủ Nhân, Xin Hãy Cởi Ra!</a></h3>
-				          <div className="episode-book"><a href="https://truyenqq.com/truyen-tranh/chu-nhan-xin-hay-coi-ra-3599-chap-35.html"> Chương 35</a></div>
-				          <div className="more-info">
-				            <div className="title-more">Chủ Nhân, Xin Hãy Cởi Ra! </div>
-				            <p className="info">Tình trạng: Đang Cập Nhật</p>
-				            <p className="info">Lượt xem: 58,432</p>
-				            <p className="info">Lượt theo dõi: 164</p>
-				            <div className="list-tags">
-				              <a className="blue" href="https://truyenqq.com/the-loai/manhua-35.html">Manhua</a><a className="blue" href="https://truyenqq.com/the-loai/romance-36.html">Romance</a><a className="blue" href="https://truyenqq.com/the-loai/shoujo-38.html">Shoujo</a> </div>
-				            <div className="excerpt">Bị người yêu thanh mai trúc mã phản bội, tôi liền xách túi bỏ đi. Cái gì trúc mã dịu dàng, thiếu niên trong trắng, tôi đều không cần nữa. Người tôi cần chỉ có anh ấy, giám đốc Lạc Cảnh Minh bá đạo, tự luyến, kiêu ngạo không ai bằng!
-				            </div>
-				          </div>
-				        </div>
-				      </div>
-				      <div className="col-xs-6 col-sm-4 col-md-3 col-lg-2 cm-item">
-				        <div className="story-item show_left">
-				          <a href="https://truyenqq.com/truyen-tranh/chu-nhan-xin-hay-coi-ra-3599.html">
-				            <img className="story-cover img-responsive" src="images/chu-nhan-xin-hay-coi-ra_1502711358.jpg" alt="Chủ Nhân, Xin Hãy Cởi Ra!" />
-				          </a>
-				          <div className="top-notice">
-				            <span className="time-ago">7 Phút Trước</span> <span className="type-label hot">Hot</span> </div>
-				          <h3 className="title-book"><a href="https://truyenqq.com/truyen-tranh/chu-nhan-xin-hay-coi-ra-3599.html">Chủ Nhân, Xin Hãy Cởi Ra!</a></h3>
-				          <div className="episode-book"><a href="https://truyenqq.com/truyen-tranh/chu-nhan-xin-hay-coi-ra-3599-chap-35.html"> Chương 35</a></div>
-				          <div className="more-info">
-				            <div className="title-more">Chủ Nhân, Xin Hãy Cởi Ra! </div>
-				            <p className="info">Tình trạng: Đang Cập Nhật</p>
-				            <p className="info">Lượt xem: 58,432</p>
-				            <p className="info">Lượt theo dõi: 164</p>
-				            <div className="list-tags">
-				              <a className="blue" href="https://truyenqq.com/the-loai/manhua-35.html">Manhua</a><a className="blue" href="https://truyenqq.com/the-loai/romance-36.html">Romance</a><a className="blue" href="https://truyenqq.com/the-loai/shoujo-38.html">Shoujo</a> </div>
-				            <div className="excerpt">Bị người yêu thanh mai trúc mã phản bội, tôi liền xách túi bỏ đi. Cái gì trúc mã dịu dàng, thiếu niên trong trắng, tôi đều không cần nữa. Người tôi cần chỉ có anh ấy, giám đốc Lạc Cảnh Minh bá đạo, tự luyến, kiêu ngạo không ai bằng!
-				            </div>
-				          </div>
-				        </div>
-				      </div>
+				      {cungTheLoai}
 				    </div>
 				  </div>
 				</section>
@@ -412,15 +238,19 @@ class Detail extends Component {
 }
 
 function mapState(state) {
-    const { detail, follows } = state;
+    const { detail, follows, followed, likes, mangas } = state;
     const { loggedIn } = state.authentication;
-    return { detail, follows, loggedIn };
+    return { detail, follows, loggedIn, followed, mangas };
 }
 
 const actionCreators = {
     getManga: detailActions.getById,
     getFollows: followActions.getAll,
-    createFollow: followActions.create
+    createFollow: followActions.create,
+    createLike: likeActions.create,
+    viewCount: mangaActions.viewCount,
+    getMangas: mangaActions.getAll,
+
 }
 
 const connectedDetailPage = connect(mapState, actionCreators)(Detail);

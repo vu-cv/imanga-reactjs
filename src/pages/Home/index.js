@@ -1,60 +1,46 @@
 import React, {Component} from 'react';
 // import Header from '../../components/layouts/Header';
-import Footer from '../../layouts/Footer';
+import { Footer } from '../../layouts';
 // import './style.css';
 
 import { Link } from "react-router-dom";
 import {Helmet} from "react-helmet";
-import CommicItem from "../../layouts/CommicItem";
+// import CommicItem from "../../layouts/CommicItem";
 import { MangaItem } from "../../layouts";
 // import axios from 'axios';
 import { mangaActions, chapterActions } from '../../_actions';
 import { connect } from 'react-redux';
-
+import { apiManga } from '../../config';
+import { CommicLastUpdate } from './CommicLastUpdate';
+import { CommicIsFemale } from './CommicIsFemale';
+import { CommicIsMale } from './CommicIsMale';
 class Home extends Component {
 
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			data: null
 		};
+
 
 	}
 
 	componentDidMount() {
-		this.props.getMangas(18);
 		this.props.getChapters(5);
+		this.props.getMangas(18, 'updatedAt:DESC');
 
 	}
 
 	render() {
-		let { mangas, chapters } = this.props;
-		let listUpdate = [];
-		let listSex = [];
+		let { chapters } = this.props;
 
-		if (mangas.items) {
-			mangas.items.map(function(manga, index) {
-				listUpdate.push(<MangaItem manga={manga} key={index}/>);
-			})
-		}
-
-		console.log(listUpdate)
-		
-		
-		const viewmoreStyle = {clear: 'both'};
-
-		for (var j = 0; j < 12; j++) {
-			listSex.push(<CommicItem time={j} key={j}/>);
-		}
-		
 	  return (
 	  	<div className="wrap-home">
 
 	  		<Helmet>
                 <title>Trang chủ</title>
                 <link rel="stylesheet" href="/css/home.css" />
-                <script type="text/javascript" src="/js/home.js"></script>
+                <script type="text/javascript" data-type={'Trang chủ'} src="/js/header.js"></script>
             </Helmet>
 			  <section id="hero">
 			    <div className="container">
@@ -144,31 +130,11 @@ class Home extends Component {
 			  </section>
 			  <section id="main-content">
 			    <div className="container">
-			      <div className="latest">
-			        <div className="col-sm-12">
-			          <div className="caption lists-title" id="list-update"><a href="https://truyenqq.com/truyen-moi-cap-nhat.html"><span className="starts-icon" />Truyện mới cập nhật</a></div>
-			        </div>
 
-			        {listUpdate}
-
-			        <div style={viewmoreStyle} className="has-text-centered text-center">
-			          <a href="https://truyenqq.com/truyen-moi-cap-nhat/trang-2.html" className="view-more-btn">Xem thêm nhiều truyện</a>
-			        </div>
-			      </div>
-			      {/* / end row latest */}
-			      <div className="female">
-			        <div className="col-sm-12">
-			          <div className="caption lists-title" id="list-female"><a href="https://truyenqq.com/truyen-moi-cap-nhat.html"><span className="female-icon" />Truyện con gái</a></div>
-			        </div>
-			        {listSex}
-			      </div>
-			      {/* / end truyen con gai */}
-			      <div className="male">
-			        <div className="col-sm-12">
-			          <div className="caption lists-title" id="list-male"><a href="https://truyenqq.com/truyen-moi-cap-nhat.html"><span className="male-icon" />Truyện con trai</a></div>
-			        </div>
-			        {listSex}
-			      </div>
+			      <CommicLastUpdate />
+			      <CommicIsFemale />
+			      <CommicIsMale />
+			      
 			    </div>
 			  </section>
 			  <section className="right-bar pc hidden-xs hidden-sm">

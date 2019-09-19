@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 // import Header from '../../components/layouts/Header';
 import {Helmet} from "react-helmet";
-import Footer from '../../layouts/Footer';
+import { Footer } from '../../layouts';
 import { Pagination } from '../../layouts';
 import { connect } from 'react-redux';
-import { categoryActions } from '../../_actions';
+import { categoryActions, mangaActions } from '../../_actions';
 // import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { MangaItem } from "../../layouts";
 
@@ -14,25 +14,19 @@ class Category extends Component {
 	constructor(props) {
 		super(props);
 		let { id } = this.props.match.params;
-		this.props.getCategory(id);
 
 		this.state = {
 			typeOption: id
 		};
 
-/*		this.props.history.listen((location, action) => {
-			console.log(location)
-			console.log(action)
-		})*/
-
+        this.props.getCategories();
 		this.handleChange = this.handleChange.bind(this);
 	}
 
 	componentDidMount() {
 		let { id } = this.props.match.params;
 		
-        this.props.getCategory(id);
-        this.props.getCategories();
+        this.props.getMangas(null, null, 'categories='+id)
     }
 
     handleChange(e) {
@@ -41,23 +35,19 @@ class Category extends Component {
     	})
 
     	this.props.history.push('/category/'+e.target.value)
-    	this.props.getCategory(e.target.value);
+    	this.props.getMangas(null, null, 'categories='+e.target.value)
 
     }
 
 	render() {
 		let params = this.props.match.params;
-		const { category, categories } = this.props;
+		const { category, categories, mangas } = this.props;
+		
 		let commicType = [];
-		let mangas = [];
+		let listMangas = [];
 
 
-/*		if (categories.loading) {
-			console.log('Loading...');
-		}
-		if (categories.error) {
-			console.log(categories.error)
-		}*/
+
 		if (categories.items) {
 
 			categories.items.map(function(category, index) {
@@ -65,9 +55,9 @@ class Category extends Component {
 			})
 		}
 
-		if (category.item) {
-			category.item.manga.map(function(manga, index) {
-				mangas.push(<MangaItem key={index} manga={manga} />);
+		if (mangas.items) {
+			mangas.items.map(function(manga, index) {
+				listMangas.push(<MangaItem key={index} manga={manga} />);
 			})
 		}
 
@@ -138,7 +128,7 @@ class Category extends Component {
 				    </div>
 				    <div className="cat-list">
 				      <div className="sr-only">phải có thì mới đúng</div>
-				      {mangas}
+				      {listMangas}
 				    </div>
 				    {/* /.list-stories */}
 				    <Pagination />
@@ -153,13 +143,14 @@ class Category extends Component {
 }
 
 function mapState(state) {
-    const { category, categories } = state;
-    return { category, categories };
+    const { category, categories, mangas } = state;
+    return { category, categories, mangas };
 }
 
 const actionCreators = {
     getCategories: categoryActions.getAll,
-    getCategory: categoryActions.getById
+    getCategory: categoryActions.getById,
+    getMangas: mangaActions.getAll
 }
 
 const connectedCategoryPage = connect(mapState, actionCreators)(Category);

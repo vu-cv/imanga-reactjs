@@ -1,15 +1,14 @@
 import config from '../config';
 import { authDefault } from '../_helpers';
 import { connect } from 'react-redux';
-export const followService = {
-	getAll,
-    store
+export const likeService = {
+    store,
+    getAll
 }
 
 function getAll(isLogin) {
     if (!isLogin) {
-        let mangas = JSON.parse(localStorage.getItem('mangas')) || [];
-        // return mangas;
+        let mangas = JSON.parse(localStorage.getItem('likes')) || [];
         return Promise.resolve(mangas);
     } else {
 
@@ -20,7 +19,7 @@ function getAll(isLogin) {
 function store(isLogin, manga) {
 
     if (!isLogin) {
-        let mangas = JSON.parse(localStorage.getItem('mangas')) || [];
+        let mangas = JSON.parse(localStorage.getItem('likes')) || [];
 
         let check = mangas.findIndex(index => {
             return index.id == manga.id;
@@ -35,7 +34,7 @@ function store(isLogin, manga) {
                     'Authorization': authDefault().Authorization
                 },
                 body: JSON.stringify({ 
-                        followCount:manga.followCount+1,
+                        likeCount:manga.likeCount+1,
                     }), 
                 
             }
@@ -43,7 +42,7 @@ function store(isLogin, manga) {
             .then(handleResponse)
             .then(data => {
                 console.log(data)
-                localStorage.setItem('mangas', JSON.stringify(mangas));
+                localStorage.setItem('likes', JSON.stringify(mangas));
                 return data;
             })
         } else {
@@ -55,14 +54,15 @@ function store(isLogin, manga) {
                     'Authorization': authDefault().Authorization
                 },
                 body: JSON.stringify({ 
-                        followCount:manga.followCount-1,
+                        likeCount:manga.likeCount-1,
                     }), 
                 
             }
             return fetch(config.apiUrl + '/manga/'+manga.id, options)
             .then(handleResponse)
             .then(data => {
-                localStorage.setItem('mangas', JSON.stringify(mangas));
+                console.log(data)
+                localStorage.setItem('likes', JSON.stringify(mangas));
                 return data;
             })
         }

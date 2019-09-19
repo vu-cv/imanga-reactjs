@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Header} from './components/Header';
-import TopHeader from './components/TopHeader';
+import { TopHeader } from './components/TopHeader';
 import './style.css';
 
 import Signin from './components/Signin';

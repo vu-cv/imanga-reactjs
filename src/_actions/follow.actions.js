@@ -1,5 +1,6 @@
 import { followConstants } from '../_constants';
 import { followService } from '../_services';
+import { alertActions } from './';
 
 export const followActions = {
 	getAll,
@@ -27,10 +28,20 @@ function create(isLogin, manga) {
     return dispatch => {
         dispatch(request());
         followService.store(isLogin, manga)
+        .then(
+            data => {
+                dispatch(success(data))   
+                dispatch(alertActions.success('Đã theo dõi'));
+            },
+            error => {
+                dispatch(failure(error))
+                dispatch(alertActions.success('Đã hủy theo dõi'));
+            }
+        );
     };
 
 
-    function request() { return { type: followConstants.CREATE_REQUEST } }
-    function success(follows) { return { type: followConstants.CREATE_SUCCESS, follows } }
-    function failure(error) { return { type: followConstants.CREATE_FAILURE, error } }
+    function request() { return { type: followConstants.FOLLOW_REQUEST } }
+    function success(follows) { return { type: followConstants.FOLLOW_SUCCESS, follows } }
+    function failure(error) { return { type: followConstants.FOLLOW_FAILURE, error } }
 }

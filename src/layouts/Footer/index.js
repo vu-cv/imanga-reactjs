@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './style.css';
-
+import { connect } from 'react-redux';
 class Footer extends Component {
 	constructor(props) {
 		super(props);
@@ -20,8 +20,8 @@ class Footer extends Component {
 			      </div>
 			      <div className="col-sm-6">
 			        <div className="text-footer-right text-right">
-			          <img src="images/app-store.png" alt="" />
-			          <img src="images/google-play.png" alt="" />
+			          <img src="/images/app-store.png" alt="" />
+			          <img src="/images/google-play.png" alt="" />
 			        </div>
 			      </div>
 			    </div>
@@ -36,4 +36,5 @@ class Footer extends Component {
 
 
 
-export default Footer;
+const connectedFooterPage = connect()(Footer);
+export { connectedFooterPage as Footer };

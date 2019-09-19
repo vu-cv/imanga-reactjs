@@ -98,44 +98,20 @@ class Header extends Component {
 			            </MenuDropdown>
 			            <MenuDropdown name="Sắp Xếp">
 			            	<ColumnMenu>
-			            		<MenuItem url='/category' text="Ngày"/>
-			            		<MenuItem url='/category' text="Tháng"/>
-			            		<MenuItem url='/category' text="Truyện Con Gái"/>
-			            		<MenuItem url='/category' text="Truyện Con Gái"/>
-			            		<MenuItem url='/category' text="Truyện Con Gái"/>
-			            		<MenuItem url='/category' text="Truyện Con Gái"/>
-			            		<MenuItem url='/category' text="Truyện Con Gái"/>
-			            	</ColumnMenu>
-			            	<ColumnMenu>
-			            		<MenuItem url='/category' text="Ngày"/>
-			            		<MenuItem url='/category' text="Tháng"/>
-			            		<MenuItem url='/category' text="Truyện Con Gái"/>
-			            		<MenuItem url='/category' text="Truyện Con Gái"/>
-			            		<MenuItem url='/category' text="Truyện Con Gái"/>
-			            		<MenuItem url='/category' text="Truyện Con Gái"/>
-			            		<MenuItem url='/category' text="Truyện Con Gái"/>
-			            	</ColumnMenu>
-			            	<ColumnMenu>
-			            		<MenuItem url='/category' text="Ngày"/>
-			            		<MenuItem url='/category' text="Tháng"/>
-			            		<MenuItem url='/category' text="Truyện Con Gái"/>
-			            		<MenuItem url='/category' text="Truyện Con Gái"/>
-			            		<MenuItem url='/category' text="Truyện Con Gái"/>
-			            		<MenuItem url='/category' text="Truyện Con Gái"/>
-			            		<MenuItem url='/category' text="Truyện Con Gái"/>
+			            		<MenuItem url='/sort/like' text="Yêu thích"/>
 			            	</ColumnMenu>
 			            	
 			            </MenuDropdown>
 			            
-			            <MenuItem url='/category/test' text="Truyện Con Gái"/>
-			            <MenuItem url='/category/test' text="Truyện Con Trai"/>
+			            <MenuItem url='/female-commic' text="Truyện Con Gái"/>
+			            <MenuItem url='/male-commic' text="Truyện Con Trai"/>
 			            <MenuItem url='/history' text="Lịch Sử"/>
 			            <MenuItem url='/follow' text="Theo Dõi"/>
 			            <li>
-			              <a href="#1">Thảo Luận</a>
+			              <a target="_blank" href="https://www.facebook.com/groups/1110939095772352">Thảo Luận</a>
 			            </li>
 			            <li>
-			              <a href="#1">Fanpage</a>
+			              <a target="_blank" href="https://www.facebook.com/IManga-Mobile-110295377029139/">Fanpage</a>
 			            </li>
 			          </ul>
 			        </div>

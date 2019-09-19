@@ -1,10 +1,6 @@
 import React, {Component} from 'react';
-// import Header from '../../components/layouts/Header';
-import Footer from '../../layouts/Footer';
-import {Pagination} from '../../layouts';
-// import './style.css';
-
-// import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Footer } from '../../layouts';
+import {Pagination, MangaPage} from '../../layouts';
 import { connect } from 'react-redux';
 import { followActions } from '../../_actions';
 import {Helmet} from "react-helmet";
@@ -32,37 +28,12 @@ class Follow extends Component {
 			})
 		}
 
-		let pathName = this.props.match.path;
 		let title = "Theo Dõi";
 
-		if (pathName === "/history") {
-			title = "Lịch Sử Đọc Truyện";
-		}
 
 		// console.log(this.props)
 	  return (
-
-	  	<div className="wrap-content">
-	  		<Helmet>
-                <title>Đang theo dõi</title>
-                <link rel="stylesheet" href="/css/category.css" />
-                <script type="text/javascript" data-type={title} src="/js/header.js"></script>
-            </Helmet>
-	  			<section className="main-content">
-				  <div className="container story-list">
-				    <div className="title-list">{title}</div>
-				    <div className="cat-list">
-				      <div className="sr-only">phải có thì mới đúng</div>
-				      {mangas}
-				    </div>
-				    {/* /.list-stories */}
-				    <Pagination />
-				  </div>
-				</section>
-
-	  		<Footer />
-
-	  	</div>
+	  	<MangaPage title={title} mangas={mangas} />
 	  );
 	}
 }

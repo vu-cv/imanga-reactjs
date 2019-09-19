@@ -5,3 +5,5 @@ export * from './detail.actions';
 export * from './manga.actions';
 export * from './chapter.actions';
 export * from './follow.actions';
+export * from './history.actions';
+export * from './like.actions';

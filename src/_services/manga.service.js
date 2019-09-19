@@ -1,21 +1,40 @@
 import config from '../config';
 import { authDefault } from '../_helpers';
+import { mangaAction } from '../_actions';
 export const mangaService = {
 	getAll,
-	getById
+	getById,
+    viewCount
 }
 
-function getAll(limit) {
+function getAll(_limit, _sort, _filter) {
     const options = {
 	    method: 'GET',
 	    headers: authDefault()
     };
 
-    let reqUrl = config.apiUrl + '/manga';
 
-    if (limit != null) {
-        reqUrl = config.apiUrl + '/manga?_limit='+limit;
+
+    let reqUrl = config.apiUrl + '/manga';
+    let a = [];
+
+    if (_limit != null) {
+        a.push('_limit='+_limit);
     }
+
+    if (_sort != null) {
+        a.push('_sort='+_sort);
+    }
+
+    if (_filter != null) {
+        a.push(_filter)
+    }
+
+    if (a.length > 0) {
+        let queryString = a.join('&');
+        reqUrl = config.apiUrl + '/manga?'+queryString;
+    }
+    console.log(reqUrl)
 
     return fetch(reqUrl, options).then(handleResponse);
 }
@@ -29,6 +48,28 @@ function getById(id) {
     let reqUrl = config.apiUrl + '/manga/' + id
 
     return fetch(reqUrl, requestOptions).then(handleResponse);
+}
+
+function viewCount(id) {
+    return getById(id).then(manga => {
+
+         const options = {
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': authDefault().Authorization
+            },
+            body: JSON.stringify({ 
+                    viewCount:manga.viewCount+1,
+                }), 
+            
+        }
+        fetch(config.apiUrl + '/manga/'+id, options)
+        .then(handleResponse)
+        .then(data => {
+            return data;
+        })
+    }, error => Promise.reject(error))
 }
 
 function handleResponse(response) {

@@ -28,8 +28,13 @@
 }
 
 .story-list {
+    min-height: 750px;
 	.cat-list {
-		overflow-x: hidden;
+		&:after {
+            content: '';
+            display: block;
+            clear: both;
+        }
 	}
 	.pagination {
 	    padding-bottom: 40px;

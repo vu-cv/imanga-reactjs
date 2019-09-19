@@ -1,16 +1,13 @@
 import React, {Component} from 'react';
-// import Header from '../../components/layouts/Header';
-import Footer from '../../layouts/Footer';
-// import './style.css';
+import { Footer } from '../../layouts';
 import { connect } from 'react-redux';
-// import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import {Helmet} from "react-helmet";
 class Account extends Component {
 
 	render() {
 		let user = this.props.user;
 		user = user.user
-		console.log(user)
+		// console.log(user)
 	  return (
 	  	<div className="wrap-content">
 	  		<Helmet>

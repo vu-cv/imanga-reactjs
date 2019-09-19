@@ -5,10 +5,59 @@ import React, {Component} from 'react';
 
 // import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import {Helmet} from "react-helmet";
+import { connect } from 'react-redux';
+import { historyActions, mangaActions } from '../../_actions';
 class Chapter extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			manga: this.props.manga,
+			loggedIn: this.props.loggedIn
 
-	
+		};
+		console.log('consssssssssssssss')
+		console.log(this.props.match.params.mangaId)
+		const { mangaId } = this.props.match.params;
+
+		this.props.getManga(mangaId)
+
+
+		this.onCreateHistory = this.onCreateHistory.bind(this)
+
+		
+	}
+
+	componentWillMount() {
+		console.log('willlllllllllll')
+
+	}
+
+	componentDidMount() {
+
+		console.log('didddddddddddddd')
+
+		// console.log(this.props.manga.item)
+		// this.onCreateHistory();
+	}
+
+	componentDidUpdate() {
+		/*console.log(this.props.manga.item)
+		this.onCreateHistory()*/
+	}
+
+	onCreateHistory() {
+		const { loggedIn, manga } = this.state;
+		console.log(manga)
+		if (manga.item != null) {
+			this.props.createHistory(loggedIn, manga.item)
+		}
+		// return;
+	}
+
+
 	render() {
+		console.log('renderrrrrrrrr')
+		console.log(this.props.manga.item)
 	  return (
 	  	<div className="wrap-content">
 	  		<Helmet>
@@ -118,4 +167,17 @@ class Chapter extends Component {
 	}
 }
 
-export default Chapter;
+function mapState(state) {
+    const { historys, manga } = state;
+    const { loggedIn } = state.authentication;
+    return { historys, loggedIn, manga };
+}
+
+const actionCreators = {
+    getHistorys: historyActions.getAll,
+    createHistory: historyActions.create,
+    getManga: mangaActions.getById
+}
+
+const connectedChapterPage = connect(mapState, actionCreators)(Chapter);
+export { connectedChapterPage as Chapter };
