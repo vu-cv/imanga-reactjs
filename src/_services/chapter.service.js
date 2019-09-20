@@ -5,7 +5,7 @@ export const chapterService = {
 	getById
 }
 
-function getAll(limit) {
+function getAll(_limit, _sort, _filter) {
     const options = {
 	    method: 'GET',
 	    headers: authDefault()
@@ -13,8 +13,23 @@ function getAll(limit) {
 
     let reqUrl = config.apiUrl + '/chapters';
 
-    if (limit != null) {
-        reqUrl = config.apiUrl + '/chapters?_limit='+limit;
+    let a = [];
+
+    if (_limit != null) {
+        a.push('_limit='+_limit);
+    }
+
+    if (_sort != null) {
+        a.push('_sort='+_sort);
+    }
+
+    if (_filter != null) {
+        a.push(_filter)
+    }
+
+    if (a.length > 0) {
+        let queryString = a.join('&');
+        reqUrl = config.apiUrl + '/chapters?'+queryString;
     }
 
     return fetch(reqUrl, options).then(handleResponse);

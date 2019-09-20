@@ -61,10 +61,10 @@ class TopHeader extends Component {
 			          </form>
 			          <ul className="nav navbar-nav navbar-right">
 			            <li>
-			              <Link to="/history">Lịch sử</Link>
+			              <Link to="/lich-su.html">Lịch sử</Link>
 			            </li>
 			            <li>
-			              <Link to="/follow">Theo dõi</Link>
+			              <Link to="/theo-doi.html">Theo dõi</Link>
 			            </li>
 			            <li>
 			              <a className="download-app" href="#1"><i className="fa fa-android" /> Tải app</a>

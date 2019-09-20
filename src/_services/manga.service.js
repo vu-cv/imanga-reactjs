@@ -34,7 +34,7 @@ function getAll(_limit, _sort, _filter) {
         let queryString = a.join('&');
         reqUrl = config.apiUrl + '/manga?'+queryString;
     }
-    console.log(reqUrl)
+    // console.log(reqUrl)
 
     return fetch(reqUrl, options).then(handleResponse);
 }

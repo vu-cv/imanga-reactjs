@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {Pagination, Footer} from './';
 import {Helmet} from "react-helmet";
-class MangaPage extends Component {
+class CategoryPage extends Component {
 	constructor(props) {
 		super(props);
 
@@ -80,36 +80,25 @@ class MangaPage extends Component {
 		return(
 
 			<div className="wrap-content">
-		  		<Helmet>
-	                <title>{title}</title>
-	                <link rel="stylesheet" href="/css/category.css" />
-	                <script type="text/javascript" data-type={title} src="/js/header.js"></script>
-	            </Helmet>
-		  			<section className="main-content">
-					  <div className="container story-list">
-					    <div className="title-list">{title}</div>
-					    <div className="cat-list">
-					      <div className="sr-only">phải có thì mới đúng</div>
-					      {currentMangas}
-					    </div>
-					    
-					    <Pagination 
-					    	currentPage={currentPage} 
-					    	pageNumbers={pageNumbers}
-					    	firstPage={this.firstPage}
-					    	lastPage={this.lastPage}
-					    	nextPage={this.nextPage}
-					    	prevPage={this.prevPage}
-					    	onChosePage={this.chosePage} />
-					  </div>
-					</section>
 
-		  		<Footer />
+		  			<div className="cat-list">
+				      <div className="sr-only">phải có thì mới đúng</div>
+				      {currentMangas}
+				    </div>
+
+				    <Pagination 
+				    	currentPage={currentPage} 
+				    	pageNumbers={pageNumbers}
+				    	firstPage={this.firstPage}
+				    	lastPage={this.lastPage}
+				    	nextPage={this.nextPage}
+				    	prevPage={this.prevPage}
+				    	onChosePage={this.chosePage} />
 
 		  	</div>
 		);
 	}
 }
 
-const connectedMangaPageItem = connect()(MangaPage);
-export { connectedMangaPageItem as MangaPage };
+const connectedCategoryPageItem = connect()(CategoryPage);
+export { connectedCategoryPageItem as CategoryPage };

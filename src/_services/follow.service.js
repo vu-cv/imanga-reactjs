@@ -1,23 +1,71 @@
 import config from '../config';
 import { authDefault } from '../_helpers';
+import { authHeader } from '../_helpers';
 import { connect } from 'react-redux';
 export const followService = {
 	getAll,
-    store
+    store,
+    checkIsFollow
 }
 
-function getAll(isLogin) {
+function getAll(isLogin, user) {
     if (!isLogin) {
         let mangas = JSON.parse(localStorage.getItem('mangas')) || [];
         // return mangas;
         return Promise.resolve(mangas);
     } else {
+        /*let jwt = user.jwt
+        let userLogin = user.user*/
 
-        console.log('Da dang nhap')
+        console.log(user)
+
+        const options = {
+            method: 'GET',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': authDefault().Authorization
+            },
+            
+        }
+
+        return fetch(config.apiUrl + '/follows?user=5d6f7ae188f8341e7875e9ee', options)
+        .then(handleResponse)
+        .then(data => {
+            let mangas = [];
+            data.map(function(e, i) {
+                mangas.push(e.manga.id)
+            })
+            var a = mangas.join('&_id=');
+            return fetch(config.apiUrl + '/manga?_id='+a, options)
+            .then(handleResponse)
+            .then(result => {
+                return result
+            })
+            // return mangas;
+        })
     }
 }
 
-function store(isLogin, manga) {
+function checkIsFollow(mangaId, user) {
+    let userLogin = user.user
+    const options = {
+        method: 'GET',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': authHeader().Authorization
+        },
+
+        
+    }
+    return fetch(config.apiUrl + '/follows?manga='+mangaId +'&user='+userLogin._id, options)
+    .then(handleResponse)
+    .then(data => {
+        return data;
+    })
+}
+
+
+function store(isLogin, manga, user) {
 
     if (!isLogin) {
         let mangas = JSON.parse(localStorage.getItem('mangas')) || [];
@@ -42,7 +90,6 @@ function store(isLogin, manga) {
             return fetch(config.apiUrl + '/manga/'+manga.id, options)
             .then(handleResponse)
             .then(data => {
-                console.log(data)
                 localStorage.setItem('mangas', JSON.stringify(mangas));
                 return data;
             })
@@ -66,6 +113,53 @@ function store(isLogin, manga) {
                 return data;
             })
         }
+    } else {
+        let jwt = user.jwt
+        let userLogin = user.user
+
+        const options = {
+            method: 'GET',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': authHeader().Authorization
+            },
+
+            
+        }
+// 123
+        return fetch(config.apiUrl + '/follows?manga='+manga.id +'&user='+userLogin._id, options)
+        .then(handleResponse)
+        .then(result => {
+            if(result.length > 0) {
+                console.log('co r them gi nua! xoa !')
+                let option = {
+                    method: 'DELETE',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': authHeader().Authorization
+                    },
+
+                }
+                return fetch(config.apiUrl + '/follows/'+result[0].id, option)
+            } else {
+                let option = {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': authHeader().Authorization
+                    },
+                    body: JSON.stringify({ 
+                        user:userLogin._id,
+                        manga: manga.id 
+                    }), 
+                }
+                console.log('da them')
+                return fetch(config.apiUrl + '/follows', option)
+
+            }
+            return result;
+        })
+
     }
 }
 

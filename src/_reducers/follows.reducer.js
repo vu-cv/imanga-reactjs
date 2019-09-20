@@ -30,3 +30,21 @@ export function follows(state = {}, action) {
 		
 	}
 }
+
+export function checkIsFollow(state = {}, action) {
+	switch(action.type) {
+		case followConstants.ISFOLLOW_REQUEST:
+			return { isfollowing: true };
+
+		case followConstants.ISFOLLOW_SUCCESS:
+			return { isFollow: action.theodoi };
+
+		case followConstants.ISFOLLOW_FAILURE:
+			return {  };
+		
+
+			
+		default: 
+			return state;
+	}
+}

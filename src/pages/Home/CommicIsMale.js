@@ -44,7 +44,7 @@ class CommicIsMale extends Component {
 	  	<div className="male">
 	        <div className="col-sm-12">
 	          <div className="caption lists-title" id="list-male">
-	          	<Link to={'/male-commic'}><span className="male-icon" />Truyện con trai</Link>
+	          	<Link to={'/truyen-con-trai.html'}><span className="male-icon" />Truyện con trai</Link>
 	          </div>
 	        </div>
 

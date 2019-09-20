@@ -11,16 +11,20 @@ class Detail extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			catId: ''
+			catId: '',
+			isFollow: null
 		};
 
+		// console.log(this.props.isFollow)
 		let { id } = this.props.match.params;
 		this.props.viewCount(id);
 
 		this.onFollow = this.onFollow.bind(this);
 		this.onLike = this.onLike.bind(this);
 
-        this.props.getManga(id);
+		const { loggedIn, user } = this.props;
+
+        this.props.getManga(id, loggedIn, user);
 
         this.props.history.listen((location, action) => {
         	let pathName = location.pathname.split('/')[1]
@@ -34,16 +38,17 @@ class Detail extends Component {
 	}
 
 	componentDidMount() {
-		// console.log(this.state)
+		console.log(this.state)
         this.props.getMangas(6, null, null)
     }
 
-    onFollow(e) {
+    onFollow(e, isFollow) {
     	e.preventDefault();
-
-    	const { loggedIn } = this.props;
+    	const { loggedIn, user } = this.props;
     	let { item } = this.props.detail;
-    	this.props.createFollow(loggedIn, item)
+    	this.props.createFollow(loggedIn, item, user)
+
+    	
     }
 
     onLike(e) {
@@ -54,22 +59,15 @@ class Detail extends Component {
     	this.props.createLike(loggedIn, item)
     }
 
-    handleReload() {
-    	console.log('ok')
-    }
-
-    componentDidUpdate() {
-    	console.log('update')
-    }
 
     
 
 	render() {
 		
 		let { id } = this.props.match.params;
-		let { item } = this.props.detail;
-		let { mangas } = this.props;
-		console.log(item)
+		let { item, isFollow } = this.props.detail;
+		let { mangas, loggedIn, checkIsFollow } = this.props;
+		console.log(checkIsFollow)
 		let authors = [];
 		let categories = [];
 		let chapters = [];
@@ -116,30 +114,36 @@ class Detail extends Component {
 
 			imageUrl = config.apiUrl + item.picture.url;
 
-			let mangas = JSON.parse(localStorage.getItem('mangas')) || [];
-			let likes = JSON.parse(localStorage.getItem('likes')) || [];
-			// console.log(mangas)
+			if (!loggedIn) {
 
-			let check = mangas.findIndex(index => {
-				return index.id == item.id;
-			});
+				let mangas = JSON.parse(localStorage.getItem('mangas')) || [];
+				let likes = JSON.parse(localStorage.getItem('likes')) || [];
+				// console.log(mangas)
 
-			let checkLike = likes.findIndex(index => {
-				return index.id == item.id;
-			});
-			
-			if (check != -1) {
-				btnFollow = <li className="li02">
-				<a href={''} onClick={this.onFollow} className="button is-danger is-rounded btn-subscribe subscribeBook" data-page="index" data-id={4097}>
-				<span className="fa fa-heart" />Hủy theo dõi</a>
-				</li>;
-			}
+				let check = mangas.findIndex(index => {
+					return index.id == item.id;
+				});
 
-			if (checkLike != -1) {
-				btnLike = <li className="li03">
-				            <a href={''} onClick={this.onLike} className="button is-danger is-rounded btn-like" data-id={4097}>
-				            <span className="fa fa-thumbs-up" />Đã thích</a>
-				          </li>;
+				let checkLike = likes.findIndex(index => {
+					return index.id == item.id;
+				});
+				
+				if (check != -1) {
+					btnFollow = <li className="li02">
+					<a href={''} onClick={this.onFollow} className="button is-danger is-rounded btn-subscribe subscribeBook" data-page="index" data-id={4097}>
+					<span className="fa fa-heart" />Hủy theo dõi</a>
+					</li>;
+				}
+
+				if (checkLike != -1) {
+					btnLike = <li className="li03">
+					            <a href={''} onClick={this.onLike} className="button is-danger is-rounded btn-like" data-id={4097}>
+					            <span className="fa fa-thumbs-up" />Đã thích</a>
+					          </li>;
+				}
+			} else {
+
+
 			}
 
 			
@@ -200,7 +204,7 @@ class Detail extends Component {
 				          {categories}
 				        </ul>
 				        <ul className="story-detail-menu">
-				          <li className="li01"><Link to={item && '/chapter/'+ id+ '/' + (item.chapters.length > 0 ? item.chapters[0]._id : '')} className="button is-danger is-rounded"><span className="btn-read" />Đọc từ đầu</Link></li>
+				          <li className="li01"><Link to={item && '/chapter/'+ id+ '/' + (item.chapters.length > 0 ? item.chapters[item.chapters.length-1]._id : '')} className="button is-danger is-rounded"><span className="btn-read" />Đọc từ đầu</Link></li>
 				          {btnFollow}
 				          {btnLike}
 				          
@@ -238,14 +242,15 @@ class Detail extends Component {
 }
 
 function mapState(state) {
-    const { detail, follows, followed, likes, mangas } = state;
-    const { loggedIn } = state.authentication;
-    return { detail, follows, loggedIn, followed, mangas };
+    const { detail, follows, followed, likes, mangas, checkIsFollow } = state;
+    const { loggedIn, user } = state.authentication;
+    return { detail, follows, loggedIn, followed, mangas, user, checkIsFollow };
 }
 
 const actionCreators = {
     getManga: detailActions.getById,
     getFollows: followActions.getAll,
+    getIsFollow: followActions.checkIsFollow,
     createFollow: followActions.create,
     createLike: likeActions.create,
     viewCount: mangaActions.viewCount,

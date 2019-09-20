@@ -14,12 +14,12 @@ class Follow extends Component {
 	}
 
 	componentDidMount() {
-		const { loggedIn } = this.props;
-		this.props.getFollows(loggedIn);
+		const { loggedIn, user } = this.props;
+		this.props.getFollows(loggedIn, user);
 	}
 
 	render() {
-		const { follows } = this.props;
+		const { follows, loggedIn } = this.props;
 		let mangas = [];
 
 		if (follows.items) {
@@ -40,8 +40,8 @@ class Follow extends Component {
 
 function mapState(state) {
     const { follows } = state;
-    const { loggedIn } = state.authentication;
-    return { follows, loggedIn };
+    const { loggedIn, user } = state.authentication;
+    return { follows, loggedIn, user };
 }
 
 const actionCreators = {

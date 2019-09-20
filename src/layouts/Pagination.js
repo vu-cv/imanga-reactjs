@@ -18,7 +18,7 @@ class Pagination extends Component {
 		        </li>
 		        
 
-		         	{
+		         	{ pageNumbers &&
 		              pageNumbers.map(number => {
 		                if (currentPage === number) {
 		                  return (

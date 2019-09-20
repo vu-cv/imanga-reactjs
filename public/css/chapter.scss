@@ -88,6 +88,17 @@
     background-color: #fff!important;
 }
 
+.story-see-content {
+    text-align: center;
+
+    p {
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    }
+}
+
 @media screen and (min-width: 769px), print {
 	.level {
 	    display: flex;

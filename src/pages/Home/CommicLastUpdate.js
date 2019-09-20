@@ -50,7 +50,7 @@ class CommicLastUpdate extends Component {
 	        {lists}
 
 	        <div style={viewmoreStyle} className="has-text-centered text-center">
-	          <a href="https://truyenqq.com/truyen-moi-cap-nhat/trang-2.html" className="view-more-btn">Xem thêm nhiều truyện</a>
+	          <Link to="/truyen-moi-cap-nhat.html" className="view-more-btn">Xem thêm nhiều truyện</Link>
 	        </div>
       </div>
 	  );

@@ -44,7 +44,7 @@ class CommicIsFemale extends Component {
 	  	<div className="female">
 	        <div className="col-sm-12">
 	          <div className="caption lists-title" id="list-female">
-	          <Link to={'/female-commic'}><span className="female-icon" />Truyện con gái</Link>
+	          <Link to={'/truyen-con-gai.html'}><span className="female-icon" />Truyện con gái</Link>
 	          </div>
 	        </div>
 

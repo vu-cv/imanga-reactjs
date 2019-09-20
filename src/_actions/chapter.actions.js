@@ -6,11 +6,11 @@ export const chapterActions = {
     getById
 }
 
-function getAll(limit) {
+function getAll(limit, sort, filter) {
     return dispatch => {
         dispatch(request());
 
-        chapterService.getAll(limit)
+        chapterService.getAll(limit, sort, filter)
             .then(
                 chapters => dispatch(success(chapters)),
                 error => dispatch(failure(error.toString()))

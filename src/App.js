@@ -13,9 +13,11 @@ import { Register } from './pages/Register';
 import { Search } from './pages/Search';
 import { Female } from './pages/Female';
 import { Male } from './pages/Male';
+import { LastUpdate } from './pages/LastUpdate';
 import { Sort } from './pages/Sort';
 
 import ScrollTopRoute from './_components/ScrollTopRoute';
+import { PrivateRoute } from './_components';
 
 import {Router, Route} from 'react-router-dom';
 import { history } from './_helpers';
@@ -81,17 +83,18 @@ class App extends Component {
 	  	<Headers isLogin={loggedIn} />
 	  		<ScrollTopRoute exact path="/" component={Home}  title={"Props through render"} />
 	  		<ScrollTopRoute path="/manga/:id" component={Detail}/>
-	  		<ScrollTopRoute path="/account" component={Account}/>
+	  		<PrivateRoute path="/account" component={Account}/>
 	  		<ScrollTopRoute path="/chapter/:mangaId/:chapterId" component={Chapter}/>
-	  		<ScrollTopRoute path="/follow" component={Follow}/>
-	  		<ScrollTopRoute path="/history" component={History}/>
+	  		<ScrollTopRoute path="/theo-doi.html" component={Follow}/>
+	  		<ScrollTopRoute path="/lich-su.html" component={History}/>
 	  		<ScrollTopRoute path="/search" component={Search}/>
 	  		
 	  		<ScrollTopRoute path="/category/:id" component={Category}/>
 	  		<ScrollTopRoute path="/login" component={Login}/>
 	  		<ScrollTopRoute path="/register" component={Register}/>
-	  		<ScrollTopRoute path="/female-commic" component={Female}/>
-	  		<ScrollTopRoute path="/male-commic" component={Male}/>
+	  		<ScrollTopRoute path="/truyen-con-gai.html" component={Female}/>
+	  		<ScrollTopRoute path="/truyen-con-trai.html" component={Male}/>
+	  		<ScrollTopRoute path="/truyen-moi-cap-nhat.html" component={LastUpdate}/>
 	  		<ScrollTopRoute path="/sort/:sortBy" component={Sort}/>
 		</Router>
 	  	</div>

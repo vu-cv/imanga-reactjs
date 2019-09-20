@@ -6,7 +6,7 @@ export function detail(state = {}, action) {
 			return { loading: true };
 
 		case detailConstants.GETBYID_SUCCESS:
-			return { item: action.detail };
+			return { item: action.detail, isFollow: action.isFollow };
 
 		case detailConstants.GETBYID_FAILURE:
 			return { error: action.error };

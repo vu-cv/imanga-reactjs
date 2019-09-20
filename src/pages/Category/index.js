@@ -1,14 +1,12 @@
 import React, {Component} from 'react';
-// import Header from '../../components/layouts/Header';
 import {Helmet} from "react-helmet";
 import { Footer } from '../../layouts';
 import { Pagination } from '../../layouts';
 import { connect } from 'react-redux';
 import { categoryActions, mangaActions } from '../../_actions';
-// import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import { MangaItem } from "../../layouts";
-
-// import './style.css';
+import { MangaItem, CategoryPage } from "../../layouts";
+import queryString from 'query-string';
+import {Link} from 'react-router-dom';
 class Category extends Component {
 
 	constructor(props) {
@@ -16,17 +14,33 @@ class Category extends Component {
 		let { id } = this.props.match.params;
 
 		this.state = {
-			typeOption: id
+			typeOption: id,
+			categoryId: id
 		};
 
+
+
         this.props.getCategories();
+        this.props.getCategory(id);
 		this.handleChange = this.handleChange.bind(this);
+		this.handleChangeSort = this.handleChangeSort.bind(this);
 	}
 
 	componentDidMount() {
 		let { id } = this.props.match.params;
 		
-        this.props.getMangas(null, null, 'categories='+id)
+		const params = queryString.parse(this.props.location.search);
+		
+		if (params.status) {
+			if (params.status == 0) {
+        		this.props.getMangas(null, null, 'categories='+id+'&status=false')
+			} else {
+				this.props.getMangas(null, null, 'categories='+id)
+			}
+		} else {
+			this.props.getMangas(null, null, 'categories='+id)
+		}
+
     }
 
     handleChange(e) {
@@ -37,12 +51,35 @@ class Category extends Component {
     	this.props.history.push('/category/'+e.target.value)
     	this.props.getMangas(null, null, 'categories='+e.target.value)
 
+    	this.props.getCategory(e.target.value);
+
+    }
+
+    handleChangeSort(e) {
+    	console.log(e.target.value)
+    	let { categoryId } = this.state;
+    	this.props.history.push(e.target.value)
+    }
+
+    componentDidUpdate(prevProps, prevState){
+    	if(prevProps.location.search != this.props.location.search) {
+    		const params = queryString.parse(this.props.location.search);
+    		let { id } = this.props.match.params;
+    		if (params.status) {
+	       		this.props.getMangas(null, null, 'categories='+id+'&status='+params.status)
+			} else if (params.sort) {
+				this.props.getMangas(null, params.sort, 'categories='+id)
+			}
+    	}
+
+
+    	
     }
 
 	render() {
 		let params = this.props.match.params;
 		const { category, categories, mangas } = this.props;
-		
+		const query = queryString.parse(this.props.location.search);
 		let commicType = [];
 		let listMangas = [];
 
@@ -91,8 +128,9 @@ class Category extends Component {
 				            <th>Tình trạng</th>
 				            <td>
 				              <ul className="choose">
-				                <li><a className="" href="https://truyenqq.com/the-loai/adult-68.html?status=0">Đang tiến hành</a></li>
-				                <li><a className="" href="https://truyenqq.com/the-loai/adult-68.html?status=2">Hoàn thành</a></li>
+				                <li><Link className={query.status == 'false' ? 'active' : ''} to={'/category/'+params.id+'?status=false'}>Đang tiến hành</Link></li>
+				                <li><Link className={query.status == 'true' ? 'active' : ''} to={'/category/'+params.id+'?status=true'}>Hoàn thành</Link></li>
+				                
 				              </ul>
 				            </td>
 				          </tr>
@@ -100,11 +138,11 @@ class Category extends Component {
 				            <th>Quốc gia</th>
 				            <td>
 				              <ul className="choose">
-				                <li><a className="" title="Truyện Trung Quốc" href="https://truyenqq.com/the-loai/adult-68.html?country=1">Trung Quốc</a></li>
-				                <li><a className="" title="Truyện Việt Nam" href="https://truyenqq.com/the-loai/adult-68.html?country=2">Việt Nam</a></li>
-				                <li><a className="" title="Truyện Hàn Quốc" href="https://truyenqq.com/the-loai/adult-68.html?country=3">Hàn Quốc</a></li>
-				                <li><a className="" title="Truyện Nhật Bản" href="https://truyenqq.com/the-loai/adult-68.html?country=4">Nhật Bản</a></li>
-				                <li><a className="" title="Truyện Mỹ" href="https://truyenqq.com/the-loai/adult-68.html?country=5">Mỹ</a></li>
+				                <li><a className="" title="Truyện Trung Quốc" href={'/category/'+params.id+'?country=0'}>Trung Quốc</a></li>
+				                <li><a className="" title="Truyện Việt Nam" href={'/category/'+params.id+'?country=1'}>Việt Nam</a></li>
+				                <li><a className="" title="Truyện Hàn Quốc" href={'/category/'+params.id+'?country=2'}>Hàn Quốc</a></li>
+				                <li><a className="" title="Truyện Nhật Bản" href={'/category/'+params.id+'?country=3'}>Nhật Bản</a></li>
+				                <li><a className="" title="Truyện Mỹ" href={'/category/'+params.id+'?country=4'}>Mỹ</a></li>
 				              </ul>
 				            </td>
 				          </tr>
@@ -112,13 +150,13 @@ class Category extends Component {
 				            <th>Sắp xếp</th>
 				            <td>
 				              <div className="select is-warning">
-				                <select id="category-sort">
-				                  <option value="https://truyenqq.com/the-loai/adult-68.html?sort=0">Ngày đăng giảm dần</option>
-				                  <option value="https://truyenqq.com/the-loai/adult-68.html?sort=1">Ngày đăng tăng dần</option>
-				                  <option value="https://truyenqq.com/the-loai/adult-68.html?sort=2">Ngày cập nhật giảm dần</option>
-				                  <option value="https://truyenqq.com/the-loai/adult-68.html?sort=3">Ngày cập nhật tăng dần</option>
-				                  <option value="https://truyenqq.com/the-loai/adult-68.html?sort=4">Lượt xem giảm dần</option>
-				                  <option value="https://truyenqq.com/the-loai/adult-68.html?sort=5">Lượt xem tăng dần</option>
+				                <select id="category-sort" onChange={this.handleChangeSort}>
+				                  <option value={'/category/'+params.id+'?sort=createdAt:DESC'}>Ngày đăng giảm dần</option>
+				                  <option value={'/category/'+params.id+'?sort=createdAt:ASC'}>Ngày đăng tăng dần</option>
+				                  <option value={'/category/'+params.id+'?sort=updatedAt:DESC'}>Ngày cập nhật giảm dần</option>
+				                  <option value={'/category/'+params.id+'?sort=updatedAt:ASC'}>Ngày cập nhật tăng dần</option>
+				                  <option value={'/category/'+params.id+'?sort=viewCount:DESC'}>Lượt xem giảm dần</option>
+				                  <option value={'/category/'+params.id+'?sort=viewCount:ASC'}>Lượt xem tăng dần</option>
 				                </select>
 				              </div>
 				            </td>
@@ -126,12 +164,8 @@ class Category extends Component {
 				        </tbody>
 				      </table>
 				    </div>
-				    <div className="cat-list">
-				      <div className="sr-only">phải có thì mới đúng</div>
-				      {listMangas}
-				    </div>
-				    {/* /.list-stories */}
-				    <Pagination />
+				    <CategoryPage mangas={listMangas} />
+				    
 				  </div>
 				</section>
 

@@ -103,10 +103,10 @@ class Header extends Component {
 			            	
 			            </MenuDropdown>
 			            
-			            <MenuItem url='/female-commic' text="Truyện Con Gái"/>
-			            <MenuItem url='/male-commic' text="Truyện Con Trai"/>
-			            <MenuItem url='/history' text="Lịch Sử"/>
-			            <MenuItem url='/follow' text="Theo Dõi"/>
+			            <MenuItem url='/truyen-con-gai.html' text="Truyện Con Gái"/>
+			            <MenuItem url='/truyen-con-trai.html' text="Truyện Con Trai"/>
+			            <MenuItem url='/lich-su.html' text="Lịch Sử"/>
+			            <MenuItem url='/theo-doi.html' text="Theo Dõi"/>
 			            <li>
 			              <a target="_blank" href="https://www.facebook.com/groups/1110939095772352">Thảo Luận</a>
 			            </li>
