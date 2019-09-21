@@ -57,7 +57,7 @@ class Register extends Component {
 	render() {
 		const { registering } = this.props;
 		const { user, submitted } = this.state;
-		console.log(this.state.user)
+		// console.log(this.state.user)
 		return(
 			<div className="login-wraper">
 				<Helmet>

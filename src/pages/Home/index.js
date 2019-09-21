@@ -1,19 +1,15 @@
 import React, {Component} from 'react';
-// import Header from '../../components/layouts/Header';
 import { Footer } from '../../layouts';
-// import './style.css';
-
 import { Link } from "react-router-dom";
 import {Helmet} from "react-helmet";
-// import CommicItem from "../../layouts/CommicItem";
 import { MangaItem } from "../../layouts";
-// import axios from 'axios';
 import { mangaActions, chapterActions } from '../../_actions';
 import { connect } from 'react-redux';
 import { apiManga } from '../../config';
 import { CommicLastUpdate } from './CommicLastUpdate';
 import { CommicIsFemale } from './CommicIsFemale';
 import { CommicIsMale } from './CommicIsMale';
+import config from '../../config.js';
 class Home extends Component {
 
 	constructor(props) {
@@ -26,13 +22,14 @@ class Home extends Component {
 	}
 
 	componentDidMount() {
-		this.props.getChapters(5);
-		this.props.getMangas(18, 'updatedAt:DESC');
+		this.props.getChapters(5, 'createdAt:DESC');
+		this.props.getMangas(null, 'updatedAt:DESC');
 
 	}
 
 	render() {
 		let { chapters } = this.props;
+		let slideDefault = 	'/images/slider_default.jpg';
 
 	  return (
 	  	<div className="wrap-home">
@@ -51,13 +48,13 @@ class Home extends Component {
 			              <div className="tile is-child">
 			                <Link to={chapters.items && '/chapters/' + chapters.items[0]._id}>
 			                  <div className="hero-item has-excerpt">
-			                    <img className="tor-left" src="http://i.mangaqq.com/slider/583x386/slider_1559213537.jpg?thang=t241" alt="cover" />
+			                    <img className="tor-left" src={chapters.items && chapters.items[0].picture != null ? config.apiUrl + chapters.items[0].picture.url : slideDefault} alt="cover" />
 			                    <div className="bottom-shadow" />
 			                    <div className="captions">
 			                      <h5>Thể loại: Drama, Fantasy, Shounen, Romance, Historical</h5>
 			                      <h3>{ chapters.items && chapters.items[0].name }</h3>
 			                    </div>
-			                    <div className="chapter red">Chương 102</div>
+			                    <div className="chapter red">Chương {chapters.items && chapters.items[0].chapterNumber}</div>
 			                    <div className="excerpt">Kimetsu no Yaiba – Tanjirou là con cả của gia đình vừa mất cha. Một ngày nọ, Tanjirou đến thăm thị trấn khác để bán than, khi đêm về cậu ở nghỉ tại nhà người khác thay vì về nhà vì lời đồn thổi về ác quỷ luôn rình mò gần núi vào buổi tối. Khi cậu về nhà vào ngày hôm sau, bị kịch đang đợi chờ cậu…
 			                    </div>
 			                  </div>
@@ -71,12 +68,12 @@ class Home extends Component {
 			              <div className="col-sm-6 pdr-0 tile is-child">
 			                <Link to={chapters.items && '/chapters/' + chapters.items[1]._id}>
 			                  <div className="hero-item">
-			                    <img className="cover" src="http://i.mangaqq.com/slider/290x191/slider_1559213426.jpg?thang=t241" alt="cover" />
+			                    <img className="cover" src={chapters.items && chapters.items[1].picture != null ? config.apiUrl + chapters.items[1].picture.url : slideDefault} alt="cover" />
 			                    <div className="bottom-shadow" />
 			                    <div className="captions">
 			                      <h3>{ chapters.items && chapters.items[1].name }</h3>
 			                    </div>
-			                    <div className="chapter orange">Chương 323</div>
+			                    <div className="chapter orange">Chương {chapters.items && chapters.items[1].chapterNumber}</div>
 			                  </div>
 			                  {/* /.hero-item */}
 			                </Link>
@@ -84,12 +81,12 @@ class Home extends Component {
 			              <div className="col-sm-6 pdr-0 tile is-child pdl-4">
 			                <Link to={chapters.items && '/chapters/' + chapters.items[2]._id}>
 			                  <div className="hero-item">
-			                    <img className="cover" src="http://i.mangaqq.com/slider/290x191/slider_1560501729.jpg?thang=t241" alt="cover" />
+			                    <img className="cover" src={chapters.items && chapters.items[2].picture != null ? config.apiUrl + chapters.items[2].picture.url : slideDefault} alt="cover" />
 			                    <div className="bottom-shadow" />
 			                    <div className="captions">
 			                      <h3>{ chapters.items && chapters.items[2].name }</h3>
 			                    </div>
-			                    <div className="chapter blue">Chương 146</div>
+			                    <div className="chapter blue">Chương {chapters.items && chapters.items[2].chapterNumber}</div>
 			                  </div>
 			                  {/* /.hero-item */}
 			                </Link>
@@ -99,27 +96,25 @@ class Home extends Component {
 			              <div className="col-sm-6 mgb-0 pdr-0 tile is-child">
 			                <Link to={chapters.items && '/chapters/' + chapters.items[3]._id}>
 			                  <div className="hero-item">
-			                    <img className="cover" src="http://i.mangaqq.com/slider/290x191/slider_1560493497.jpg?thang=t241" alt="cover" />
+			                    <img className="cover" src={chapters.items && chapters.items[3].picture != null ? config.apiUrl + chapters.items[3].picture.url : slideDefault} alt="cover" />
 			                    <div className="bottom-shadow" />
 			                    <div className="captions">
 			                      <h3>{ chapters.items && chapters.items[3].name }</h3>
 			                    </div>
-			                    <div className="chapter violet">Chương 216</div>
+			                    <div className="chapter violet">Chương {chapters.items && chapters.items[3].chapterNumber}</div>
 			                  </div>
-			                  {/* /.hero-item */}
 			                </Link>
 			              </div>
 			              <div className="col-sm-6 mgb-0 pdr-0 tile is-child pdl-4">
 			                <Link to={chapters.items && '/chapters/' + chapters.items[4]._id}>
 			                  <div className="hero-item">
-			                    <img className="cover" src="http://i.mangaqq.com/slider/290x191/slider_1560573084.jpg?thang=t241" alt="cover" />
+			                    <img className="cover" src={chapters.items && chapters.items[4].picture != null ? config.apiUrl + chapters.items[4].picture.url : slideDefault} alt="cover" />
 			                    <div className="bottom-shadow" />
 			                    <div className="captions">
 			                      <h3>{ chapters.items && chapters.items[4].name }</h3>
 			                    </div>
-			                    <div className="chapter green">Chương 239</div>
+			                    <div className="chapter green">Chương {chapters.items && chapters.items[4].chapterNumber}</div>
 			                  </div>
-			                  {/* /.hero-item */}
 			                </Link>
 			              </div>
 			            </div>

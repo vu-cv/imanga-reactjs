@@ -4,7 +4,9 @@ export const userService = {
 	login,
 	logout,
 	getAll,
-	register
+	register,
+    update,
+    getMe
 }
 function login(username, password) {
 	// console.log(username +'-'+ password);
@@ -25,10 +27,36 @@ function login(username, password) {
 	.then(handleResponse)
 	.then(user => {
 		localStorage.setItem('user', JSON.stringify(user));
-		// console.log(user);
+		console.log(user);
 		return user;
 	})
 }
+
+function update(userId, data) {
+
+    const options = {
+        method: 'PUT',
+        headers: authHeader(),
+        body: JSON.stringify({ 
+            firstName: data.firstName,
+            lastName: data.lastName,
+            birthday: data.birthday,
+            phone: data.phone,
+            sex: data.sex
+        }), 
+        
+    }
+
+    return fetch(config.apiUrl + '/users/'+userId, options)
+    .then(handleResponse)
+    .then(user => {
+        // localStorage.setItem('user', JSON.stringify(user));
+        // console.log(user);
+        return user;
+    })
+}
+
+
 
 function logout() {
     // remove user from local storage to log user out
@@ -45,6 +73,16 @@ function getAll() {
 
     return fetch(config.apiUrl + '/authors', options).then(handleResponse);
 }
+function getMe() {
+
+    const options = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    return fetch(config.apiUrl + '/users/me', options).then(handleResponse);
+}
+
 function register(user) {
     const options = {
         method: 'POST',

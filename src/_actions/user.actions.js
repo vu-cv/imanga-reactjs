@@ -7,7 +7,9 @@ export const userActions = {
     login,
     logout,
     getAll,
-    register
+    register,
+    edit,
+    getMe
 };
 
 function login(username, password) {
@@ -66,8 +68,7 @@ function register(user) {
             .then(
                 user => { 
                     dispatch(success());
-                    this.history.push('/login');
-                    dispatch(alertActions.success('Đăng ký thành công'));
+                    dispatch(alertActions.success('Đã lưu'));
                 },
                 error => {
                     dispatch(failure(error));
@@ -80,3 +81,47 @@ function register(user) {
     function success(user) { return { type: userConstants.REGISTER_SUCCESS, user } }
     function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } }
 }
+
+
+function edit(userId, data) {
+    return dispatch => {
+        dispatch(request(data));
+
+        userService.update(userId, data)
+            .then(
+                user => { 
+                    dispatch(success());
+                    dispatch(alertActions.success('Đăng ký thành công'));
+                },
+                error => {
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
+                }
+            );
+    };
+
+    function request(user) { return { type: userConstants.UPDATE_REQUEST, user } }
+    function success(user) { return { type: userConstants.UPDATE_SUCCESS, user } }
+    function failure(error) { return { type: userConstants.UPDATE_FAILURE, error } }
+}
+function getMe() {
+    return dispatch => {
+        dispatch(request());
+
+        userService.getMe()
+            .then(
+                user => { 
+                    dispatch(success(user));
+                },
+                error => {
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
+                }
+            );
+    };
+
+    function request(user) { return { type: userConstants.GETME_REQUEST, user } }
+    function success(user) { return { type: userConstants.GETME_SUCCESS, user } }
+    function failure(error) { return { type: userConstants.GETME_FAILURE, error } }
+}
+

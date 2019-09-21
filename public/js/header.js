@@ -1,9 +1,11 @@
 $(document).ready(function() {
 
 
-	$('ul.nav.navbar-nav li').on('click', function (event) {
-	    $(this).parent().parent().removeClass('in');
+	$('ul.nav.navbar-nav li:not(.dropdown)').on('click', function (event) {
+	    // $(this).parent().parent().removeClass('in');
+	    $('.navbar-collapse').removeClass('in');
 	});
+
 	$('#scr-top').click(function(event) {
 		$('html, body').animate({
             scrollTop: 0

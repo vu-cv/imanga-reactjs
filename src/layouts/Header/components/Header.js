@@ -11,7 +11,16 @@ class Header extends Component {
 		super(props);
 
 		this.state = {
+			textSearch: ''
 		}
+
+
+	}
+
+	onChange(e){
+		/*this.setState({
+			textSearch: e.target.value
+		})*/
 	}
 
 	componentDidMount() {
@@ -82,13 +91,15 @@ class Header extends Component {
 			        </div>
 			        <div className="collapse navbar-collapse navbar-ex1-collapse">
 			          <ul className="nav navbar-nav">
-			            <li className="hidden-lg">
+			            <li className="hidden-lg dropdown">
+			              <form action='/search' method="get">
 			              <div className="form-group top-search">
-			                <input type="text" className="form-control" placeholder="Bạn chỉ việc nhập từ khóa, còn lại để tuấn lo" />
+			                <input type="text" name="q" onChange={this.onChange} className="form-control" placeholder="Bạn chỉ việc nhập từ khóa, còn lại để tuấn lo" />
 			                <button type="submit" className="btn btn-default">
 			                  <i className="fa fa-search" />
 			                </button>
 			              </div>
+			               </form>
 			            </li>
 			            <li className="hidden-lg">
 			              <Link to="/">Trang chủ</Link>

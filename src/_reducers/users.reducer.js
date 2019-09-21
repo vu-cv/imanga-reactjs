@@ -11,6 +11,28 @@ export function users(state = {}, action) {
 		case userConstants.GETALL_FAILURE:
 			return { error: action.error };
 
+		case userConstants.UPDATE_REQUEST:
+			return { loading: true };
+
+		case userConstants.UPDATE_SUCCESS:
+			return { items: action.users };
+
+		case userConstants.UPDATE_FAILURE:
+			return { error: action.error };
+
+		case userConstants.GETME_REQUEST:
+			return { loading: true };
+
+		case userConstants.GETME_SUCCESS:
+			return { item: action.user };
+
+		case userConstants.GETME_FAILURE:
+			return { error: action.error };
+
+		
+
+		
+
 		case userConstants.DELETE_REQUEST:
 			return { 
 				...state,

@@ -13,7 +13,7 @@ class History extends Component {
 
 	componentDidMount() {
 		const { loggedIn } = this.props;
-		this.props.getHistorys(loggedIn);
+		// this.props.getHistorys(loggedIn);
 	}
 
 	render() {
