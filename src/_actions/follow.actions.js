@@ -8,6 +8,31 @@ export const followActions = {
     checkIsFollow
 }
 
+function checkIsFollow(mangaId, userId) {
+    return dispatch => {
+        dispatch(request())
+        followService.checkIsFollow(mangaId, userId)
+        .then(
+            data => {
+                let theodoi = null;
+                if(data.length > 0) {
+                    theodoi = true;
+                } else {
+                    theodoi = false;
+                }
+                dispatch(success(data, theodoi))
+
+            }, error => {
+                dispatch(failure(error.toString()))
+            }
+        );
+
+    }
+    function request() { return { type: followConstants.CHECKISFOLLOW_REQUEST } }
+    function success(follows, theodoi) { return { type: followConstants.CHECKISFOLLOW_SUCCESS, follows, theodoi } }
+    function failure(error) { return { type: followConstants.CHECKISFOLLOW_FAILURE, error } }
+}
+
 function getAll(isLogin, user) {
     return dispatch => {
         dispatch(request());
@@ -24,22 +49,6 @@ function getAll(isLogin, user) {
     function success(follows) { return { type: followConstants.GETALL_SUCCESS, follows } }
     function failure(error) { return { type: followConstants.GETALL_FAILURE, error } }
 }
-function checkIsFollow(mangaId, user) {
-    return dispatch => {
-        dispatch(request());
-
-        followService.checkIsFollow(mangaId, user)
-        .then(
-            follows => {
-                dispatch(success(follows))},
-            error => dispatch(failure(error.toString()))
-        );
-    };
-
-    function request() { return { type: followConstants.ISFOLLOW_REQUEST } }
-    function success(follows) { return { type: followConstants.ISFOLLOW_SUCCESS, follows } }
-    function failure(error) { return { type: followConstants.ISFOLLOW_FAILURE, error } }
-}
 
 function create(isLogin, manga, user) {
 
@@ -53,20 +62,21 @@ function create(isLogin, manga, user) {
                     dispatch(alertActions.success('Đã theo dõi'));
                 } else {
                     let theodoi = null;
-                    if (data.length > 0) {
-                        theodoi = false;
-                        dispatch(alertActions.success('Đã hủy theo dõi'));
-                    } else {
-                        theodoi = true
+                    if (data.length == 0) {
+                        theodoi = true;
                         dispatch(alertActions.success('Đã theo dõi'));
+                    } else {
+                        theodoi = false
+                        dispatch(alertActions.success('Đã hủy theo dõi'));
                     }
+                    // console.log(data)
                     dispatch(success(data, theodoi))
 
                 }
             },
             error => {
                 dispatch(failure(error))
-                dispatch(alertActions.success('Đã hủy theo dõi'));
+                dispatch(alertActions.success(error.message.toString()));
             }
         );
     };

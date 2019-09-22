@@ -12,14 +12,33 @@ export function likes(state = {}, action) {
 		case likeConstants.GETALL_FAILURE:
 			return { error: action.error };
 
-		case likeConstants.like_REQUEST:
-			return { likeing: true, manga: action.manga };
+		case likeConstants.LIKE_REQUEST:
+			return { liking: true };
 
-		case likeConstants.like_SUCCESS:
-			return { likeed: true, manga: action.likes };
+		case likeConstants.LIKE_SUCCESS:
+			return { 
+				liked: action.dathich,
+				manga: action.likes };
 
-		case likeConstants.like_FAILURE:
-			return { likeed: false, manga: action.error };
+		case likeConstants.LIKE_FAILURE:
+			return { error: action.error };
+
+		case likeConstants.GETALL_FAILURE:
+			return { error: action.error };
+
+		case likeConstants.CHECKISLIKE_REQUEST:
+			return { checkLiking: true };
+
+		case likeConstants.CHECKISLIKE_SUCCESS:
+			return { 
+				liked: action.dathich,
+				manga: action.likes 
+			};
+
+		case likeConstants.CHECKISLIKE_FAILURE:
+			return { error: action.error };
+
+		
 
 			
 		default: 

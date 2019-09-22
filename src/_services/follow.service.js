@@ -8,6 +8,32 @@ export const followService = {
     checkIsFollow
 }
 
+function checkIsFollow(mangaId, userId) {
+    const options = {
+        method: 'GET',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': authHeader().Authorization
+        },
+        
+    }
+    return fetch(config.apiUrl + '/follows?manga='+mangaId+'&user='+userId, options)
+            .then(handleResponse)
+            .then(
+                result => {
+                    console.log(result);
+                    return result;
+                },
+                error => {
+                    return error;
+                }
+            )
+            .catch(e => {
+                console.log(e)
+            })
+
+}
+
 function getAll(isLogin, user) {
     if (!isLogin) {
         let mangas = JSON.parse(localStorage.getItem('mangas')) || [];
@@ -44,24 +70,6 @@ function getAll(isLogin, user) {
             // return mangas;
         })
     }
-}
-
-function checkIsFollow(mangaId, user) {
-    let userLogin = user.user
-    const options = {
-        method: 'GET',
-        headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': authHeader().Authorization
-        },
-
-        
-    }
-    return fetch(config.apiUrl + '/follows?manga='+mangaId +'&user='+userLogin._id, options)
-    .then(handleResponse)
-    .then(data => {
-        return data;
-    })
 }
 
 
@@ -126,12 +134,10 @@ function store(isLogin, manga, user) {
 
             
         }
-// 123
         return fetch(config.apiUrl + '/follows?manga='+manga.id +'&user='+userLogin._id, options)
         .then(handleResponse)
         .then(result => {
             if(result.length > 0) {
-                console.log('co r them gi nua! xoa !')
                 let option = {
                     method: 'DELETE',
                     headers: { 
@@ -140,7 +146,8 @@ function store(isLogin, manga, user) {
                     },
 
                 }
-                return fetch(config.apiUrl + '/follows/'+result[0].id, option)
+                fetch(config.apiUrl + '/follows/'+result[0].id, option)
+
             } else {
                 let option = {
                     method: 'POST',
@@ -153,11 +160,13 @@ function store(isLogin, manga, user) {
                         manga: manga.id 
                     }), 
                 }
-                console.log('da them')
-                return fetch(config.apiUrl + '/follows', option)
+                fetch(config.apiUrl + '/follows', option)
+
 
             }
             return result;
+        }, error => {
+            return error;
         })
 
     }
@@ -167,11 +176,7 @@ function handleResponse(response) {
     return response.text().then(text => {
         const data = text && JSON.parse(text);
         if (!response.ok) {
-            /*if (response.status === 400) {
-                // auto logout if 400 response returned from api
-                logout();
-                // this.location.reload(true);
-            }*/
+            
 
             const error = (data && data.message) || response.statusText;
             return Promise.reject(error);

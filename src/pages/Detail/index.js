@@ -15,14 +15,14 @@ class Detail extends Component {
 			isFollow: null
 		};
 
-		// console.log(this.props.isFollow)
 		let { id } = this.props.match.params;
+		const { loggedIn, user } = this.props;
+
 		this.props.viewCount(id);
 
 		this.onFollow = this.onFollow.bind(this);
 		this.onLike = this.onLike.bind(this);
 
-		const { loggedIn, user } = this.props;
 
         this.props.getManga(id, loggedIn, user);
 
@@ -33,6 +33,12 @@ class Detail extends Component {
 				this.props.getManga(mangaId);        		
         	}
         })
+
+        if (loggedIn) {
+	        this.props.checkIsFollow(id, user.user.id)
+	        this.props.checkIsLike(id, user.user.id)
+        }
+
 
 
 	}
@@ -54,9 +60,9 @@ class Detail extends Component {
     onLike(e) {
     	e.preventDefault();
 
-    	const { loggedIn } = this.props;
+    	const { loggedIn, user } = this.props;
     	let { item } = this.props.detail;
-    	this.props.createLike(loggedIn, item)
+    	this.props.createLike(loggedIn, item, user)
     }
 
 
@@ -66,13 +72,14 @@ class Detail extends Component {
 		
 		let { id } = this.props.match.params;
 		let { item, isFollow } = this.props.detail;
-		let { mangas, loggedIn, checkIsFollow } = this.props;
-		console.log(checkIsFollow)
+		let { mangas, loggedIn, follows, likes } = this.props;
 		let authors = [];
 		let categories = [];
 		let chapters = [];
 		let cungTheLoai = [];
 		let imageUrl = '';
+
+		console.log(likes)
 
 		
 
@@ -80,16 +87,23 @@ class Detail extends Component {
 
 		let btnFollow = <li className="li02">
 		<a href={''} onClick={this.onFollow} className="button is-danger is-rounded btn-subscribe subscribeBook" data-page="index" data-id={4097}>
-		<span className="fa fa-heart-o" />Theo dõi</a>
+		<span className="fa fa-heart-o" />Theo dõi  {follows.following &&
+	        <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+	    }</a>
+		
 		</li>;
 
 		let btnLike = <li className="li03">
-				            <a href={''} onClick={this.onLike} className="button is-danger is-rounded btn-like" data-id={4097}><span className="fa fa-thumbs-o-up" />Thích</a>
+				            <a href={''} onClick={this.onLike} className="button is-danger is-rounded btn-like" data-id={4097}><span className="fa fa-thumbs-o-up" />Thích {likes.liking &&
+	        <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+	    }</a>
 				          </li>;
 
 
 		if (item) {
+
 			item.chapters.map(function(chapter, index) {
+
 				chapters.push(
 					<div key={index} className="works-chapter-item row">
 			            <div className="col-md-10 col-sm-10 col-xs-8 ">
@@ -142,7 +156,19 @@ class Detail extends Component {
 					          </li>;
 				}
 			} else {
-
+				if (follows.followed) {
+					btnFollow = <li className="li02">
+					<a href={''} onClick={this.onFollow} className="button is-danger is-rounded btn-subscribe subscribeBook" data-page="index" data-id={4097}>
+					<span className="fa fa-heart" />Hủy theo dõi</a>
+					</li>;
+				}
+				if (likes.liked) {
+					btnLike = <li className="li03">
+					            <a href={''} onClick={this.onLike} className="button is-danger is-rounded btn-like" data-id={4097}>
+					            <span className="fa fa-thumbs-up" />Đã thích</a>
+					          </li>;
+				}
+				
 
 			}
 
@@ -242,19 +268,20 @@ class Detail extends Component {
 }
 
 function mapState(state) {
-    const { detail, follows, followed, likes, mangas, checkIsFollow } = state;
+    const { detail, follows, followed, likes, mangas } = state;
     const { loggedIn, user } = state.authentication;
-    return { detail, follows, loggedIn, followed, mangas, user, checkIsFollow };
+    return { detail, follows, loggedIn, mangas, user, likes };
 }
 
 const actionCreators = {
     getManga: detailActions.getById,
     getFollows: followActions.getAll,
-    getIsFollow: followActions.checkIsFollow,
     createFollow: followActions.create,
     createLike: likeActions.create,
     viewCount: mangaActions.viewCount,
     getMangas: mangaActions.getAll,
+    checkIsFollow: followActions.checkIsFollow,
+    checkIsLike: likeActions.checkIsLike
 
 }
 

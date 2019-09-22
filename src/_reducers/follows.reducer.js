@@ -13,13 +13,34 @@ export function follows(state = {}, action) {
 			return { error: action.error };
 
 		case followConstants.FOLLOW_REQUEST:
-			return { following: true, manga: action.manga };
+			return { 
+				following: true, 
+			};
 
 		case followConstants.FOLLOW_SUCCESS:
-			return { followed: true, manga: action.follows };
+			return { 
+				followed: action.theodoi, 
+				manga: action.follows 
+			};
 
 		case followConstants.FOLLOW_FAILURE:
-			return { followed: false, manga: action.error };
+			return { manga: action.error };
+
+		case followConstants.CHECKISFOLLOW_REQUEST:
+			return { 
+				checking: true, 
+			};
+
+		case followConstants.CHECKISFOLLOW_SUCCESS:
+			return { 
+				followed: action.theodoi, 
+				manga: action.follows 
+			};
+
+		case followConstants.CHECKISFOLLOW_FAILURE:
+			return { manga: action.error };
+
+		
 
 			
 		default: 
@@ -30,7 +51,7 @@ export function follows(state = {}, action) {
 		
 	}
 }
-
+/*
 export function checkIsFollow(state = {}, action) {
 	switch(action.type) {
 		case followConstants.ISFOLLOW_REQUEST:
@@ -47,4 +68,4 @@ export function checkIsFollow(state = {}, action) {
 		default: 
 			return state;
 	}
-}
+}*/

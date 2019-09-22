@@ -4,7 +4,30 @@ import { alertActions } from './';
 
 export const likeActions = {
 	getAll,
-    create
+    create,
+    checkIsLike
+}
+
+function checkIsLike(mangaId, userId) {
+    return dispatch => {
+        likeService.checkIsLike(mangaId, userId)
+        .then(
+            data => {
+                let dathich = null;
+                if(data.length > 0) {
+                    dathich = true;
+                } else {
+                    dathich = false;
+                }
+                dispatch(success(data, dathich))
+
+            }
+        );
+
+    }
+    function request() { return { type: likeConstants.CHECKISLIKE_REQUEST } }
+    function success(likes, dathich) { return { type: likeConstants.CHECKISLIKE_SUCCESS, likes, dathich } }
+    function failure(error) { return { type: likeConstants.CHECKISLIKE_FAILURE, error } }
 }
 
 function getAll(isLogin) {
@@ -23,15 +46,29 @@ function getAll(isLogin) {
     function failure(error) { return { type: likeConstants.GETALL_FAILURE, error } }
 }
 
-function create(isLogin, manga) {
+function create(isLogin, manga, user) {
 
     return dispatch => {
         dispatch(request());
-        likeService.store(isLogin, manga)
+        likeService.store(isLogin, manga, user)
         .then(
             data => {
-                dispatch(success(data))   
-                dispatch(alertActions.success('Đã thích'));
+                if (!isLogin) {
+                    dispatch(success(data))
+                    dispatch(alertActions.success('Đã thích'));
+                } else {
+                    let dathich = null;
+                    if (data.length == 0) {
+                        dathich = true;
+                        dispatch(alertActions.success('Đã thích'));
+                    } else {
+                        dathich = false
+                        dispatch(alertActions.success('Đã hủy thích'));
+                    }
+                    // console.log(data)
+                    dispatch(success(data, dathich))
+
+                }
             },
             error => {
                 dispatch(failure(error))
@@ -42,6 +79,6 @@ function create(isLogin, manga) {
 
 
     function request() { return { type: likeConstants.LIKE_REQUEST } }
-    function success(likes) { return { type: likeConstants.LIKE_SUCCESS, likes } }
+    function success(likes, dathich) { return { type: likeConstants.LIKE_SUCCESS, likes, dathich } }
     function failure(error) { return { type: likeConstants.LIKE_FAILURE, error } }
 }
