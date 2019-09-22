@@ -33,7 +33,7 @@ class App extends Component {
 		super(props);
 		this.state = {
 			isHomeRightBar: false,
-			loading: true
+			loading: true,
 		}
 		history.listen((location, action) => {
 		    this.props.clearAlerts();
@@ -79,6 +79,7 @@ class App extends Component {
 			this.notify(alert.message)
   			&& <ToastContainer />
 		}
+		
 	  	<Router history={history}>
 	  	<Headers isLogin={loggedIn} />
 	  		<ScrollTopRoute exact path="/" component={Home}  title={"Props through render"} />

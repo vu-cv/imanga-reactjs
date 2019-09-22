@@ -23,7 +23,7 @@ function checkIsLike(mangaId, userId) {
                     return result;
                 },
                 error => {
-                    console.log('loiiiii')
+                    return error;
                 }
             )
 
